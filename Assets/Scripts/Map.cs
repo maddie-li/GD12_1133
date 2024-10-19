@@ -3,16 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Map 
+public class Map
 {
     int mapSize = 3;
 
-    BaseRoom[,] RoomArray;
-    readonly Dictionary<Vector2, BaseRoom> _rooms = new();
+    BaseRoom[,] RoomArray; // rooms array
+    public static Dictionary<Vector2, BaseRoom> RoomsArray = new(); // coord : room dict
 
     public Map()
     {
         CreateMap();
+
         VisualiseMap();
     }
 
@@ -26,11 +27,11 @@ public class Map
             for (int y = 0; y < mapSize; y++)
             {
                 Vector2 coords = new Vector2(x, y);
-                _rooms.Add(coords, new BaseRoom(coords));
+                RoomsArray.Add(coords, new BaseRoom(coords)); // add new room to dict for every possible coord pair
             }
         }
 
-        foreach (var roomInDict in _rooms)
+        foreach (var roomInDict in RoomsArray)
         {
             BaseRoom northRoom = FindRoom(roomInDict.Key, Direction.n);
             BaseRoom eastRoom = FindRoom(roomInDict.Key, Direction.e);
@@ -44,37 +45,44 @@ public class Map
 
     public void VisualiseMap()
     {
-        foreach(var roomInDict in _rooms)
+        foreach (var roomInDict in RoomsArray)
         {
-            var mapRoomVisualise = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            mapRoomVisualise.transform.position = new Vector3(roomInDict.Key.x, 0, roomInDict.Key.y);
+            var mapRoomVisualise = GameObject.CreatePrimitive(PrimitiveType.Cube); // create cube
+            mapRoomVisualise.transform.position = new Vector3(roomInDict.Key.x, 0, roomInDict.Key.y); // location coords
+            mapRoomVisualise.transform.localScale = new Vector3 (0.9f, 0.5f, 0.9f); // small so can see spaces between
         }
-        
+
     }
 
-    private BaseRoom FindRoom(Vector2 currentRoomCoords, Direction dir)
+    public static BaseRoom FindRoom(Vector2 currentRoomCoords, Direction dir)
     {
-        BaseRoom room = null;
-        Vector2 nextRoomCoords = new Vector2(-1, -1);
+        // initialise variables as null or nonexistent room to start
+        BaseRoom room = null; 
+        Vector2 nextRoomCoords = new Vector2(-1, -1); 
 
         switch (dir)
         {
             case Direction.n:
-                // Determine North Room
-                nextRoomCoords = currentRoomCoords + Vector2.up;
+                nextRoomCoords = currentRoomCoords + Vector2.up; // increase y
                 break;
             case Direction.e:
-                // east
-                nextRoomCoords = currentRoomCoords + Vector2.right;
+                nextRoomCoords = currentRoomCoords + Vector2.right; // increase x
                 break;
             case Direction.s:
-                // south
-                nextRoomCoords = currentRoomCoords + Vector2.down;
+                nextRoomCoords = currentRoomCoords + Vector2.down; // decrease y
                 break;
             case Direction.w:
-                // west
-                nextRoomCoords = currentRoomCoords + Vector2.left;
+                nextRoomCoords = currentRoomCoords + Vector2.left; // increase x
                 break;
         }
 
+        if (RoomsArray.TryGetValue(nextRoomCoords, out var nextRoom)) // try to use dict
+        {
+            room = nextRoom;
+        }
+
+        return room;
+
     }
+
+}
