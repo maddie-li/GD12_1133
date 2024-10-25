@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
-    public class BaseRoom
+    public class BaseRoom : MonoBehaviour
     {
         //  LOCATION
         private bool[] _allowedDirections = new bool[4];
@@ -14,12 +14,16 @@ namespace Assets.Scripts
         // NAVIGATION
         private BaseRoom[] Exits { get; set; } = new BaseRoom[4];
 
+
         public BaseRoom NorthExit { get; set; } // directional linked rooms
         public BaseRoom EastExit { get; set; }
         public BaseRoom SouthExit { get; set; }
         public BaseRoom WestExit { get; set; }
 
         // FUNCTIONS
+
+
+
         public void CanExit(Direction dir, bool istrue) // sets if direction is allowed
         {
             if (istrue)

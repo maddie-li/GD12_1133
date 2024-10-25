@@ -33,7 +33,7 @@ public class BasePlayer
     public BasePlayer(Vector2 coords)
     {
         this.Coords = coords;
-        this.CurrentRoom = Map.RoomsArray[coords];
+        this.CurrentRoom = Map.RoomsDict[coords];
 
         playerVisualise.transform.position = new Vector3(coords.x, 0.5f, coords.y); // location coords
         playerVisualise.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f); // location coords

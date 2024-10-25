@@ -3,12 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// I could use array in place of dictionary
+
 public class Map
 {
     int mapSize = 3;
 
-    BaseRoom[,] RoomArray; // rooms array
-    public static Dictionary<Vector2, BaseRoom> RoomsArray = new(); // coord : room dict
+    // BaseRoom[,] RoomArray; // rooms array
+    public static Dictionary<Vector2, BaseRoom> RoomsDict = new(); // coord : room dict
 
     public Map()
     {
@@ -20,18 +22,17 @@ public class Map
 
     public void CreateMap()
     {
-        RoomArray = new BaseRoom[mapSize, mapSize];
 
         for (int x = 0; x < mapSize; x++)
         {
             for (int y = 0; y < mapSize; y++)
             {
                 Vector2 coords = new Vector2(x, y);
-                RoomsArray.Add(coords, new BaseRoom(coords)); // add new room to dict for every possible coord pair
+                RoomsDict.Add(coords, new BaseRoom(coords)); // add new room to dict for every possible coord pair
             }
         }
 
-        foreach (var roomInDict in RoomsArray)
+        foreach (var roomInDict in RoomsDict)
         {
             BaseRoom northRoom = FindRoom(roomInDict.Key, Direction.n);
             BaseRoom eastRoom = FindRoom(roomInDict.Key, Direction.e);
@@ -45,7 +46,7 @@ public class Map
 
     public void VisualiseMap()
     {
-        foreach (var roomInDict in RoomsArray)
+        foreach (var roomInDict in RoomsDict)
         {
             var mapRoomVisualise = GameObject.CreatePrimitive(PrimitiveType.Cube); // create cube
             mapRoomVisualise.transform.position = new Vector3(roomInDict.Key.x, 0, roomInDict.Key.y); // location coords
@@ -76,7 +77,7 @@ public class Map
                 break;
         }
 
-        if (RoomsArray.TryGetValue(nextRoomCoords, out var nextRoom)) // try to use dict
+        if (RoomsDict.TryGetValue(nextRoomCoords, out var nextRoom)) // try to use dict
         {
             room = nextRoom;
         }

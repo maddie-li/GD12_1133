@@ -4,26 +4,25 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    private Map _gameMap;
-    private BasePlayer _player;
+    [SerializeField] private MapManager GameMapPrefab;
 
-    // Start is called before the first frame update
-    void Start()
+    private MapManager _gameMap;
+
+    public void Start()
     {
-        _gameMap = new Map();
-        _player = new BasePlayer(new Vector2(0, 0));
-    }
+        Debug.Log("GameManagerStart");
+        transform.position = Vector3.zero;
 
-    // Update is called once per frame
-    void Update()
-    {
-        // temporary keypress (should probably use input manager)
+        // create instance of map manager
+        _gameMap = Instantiate(GameMapPrefab, transform);
+        _gameMap.transform.position = Vector3.zero;
 
-        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) { _player.Move(Direction.n); }
-        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) { _player.Move(Direction.e); }
-        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) { _player.Move(Direction.s); }
-        else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) { _player.Move(Direction.w); }
-            
+        // create the map
+        _gameMap.CreateMap();
+
+        Debug.Log("Map created");
+        _gameMap.VisualiseMap();
 
     }
+   
 }
