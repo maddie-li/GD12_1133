@@ -21,7 +21,6 @@ public class GameManager : MonoBehaviour
         _gameMap.CreateMap();
 
         Debug.Log("Map created");
-        _gameMap.VisualiseMap();
 
     }
    

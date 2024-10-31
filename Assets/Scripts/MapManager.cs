@@ -5,42 +5,63 @@ using UnityEngine;
 public class MapManager : MonoBehaviour
 {
     int mapSize = 3;
+    int roomScale = 10;
 
-    [SerializeField] int roomScale = 5;
+    // roomsdict
+    public static Dictionary<Vector2, RoomBase> RoomsDict = new (); // coord : room dict
 
-    public static Dictionary<Vector2, RoomBase> RoomsDict = new(); // coord : room dict
+    // roomtypes
+    List<Vector2> combatRoomCoords = new List<Vector2>()
+            {
+                new Vector2(0, 1),
+                new Vector2(1,0),
+                new Vector2(1, 0),
+                new Vector2(2, 2),
+                new Vector2(1, 2)
+            };
 
+    List<Vector2> treasureRoomCoords = new List<Vector2>()
+            {
+                new Vector2 (0, 2),
+                new Vector2 (2, 0),
+            };
+
+    // prefabs
     [SerializeField] private RoomBase[] RoomPrefabs;
-
-    private enum doorStates
-    {
-        open,
-        closed,
-        invisOpen,
-        invisClosed
-    }
 
     public void CreateMap()
     {
-
         for (int x = 0; x < mapSize; x++)
         {
             for (int y = 0; y < mapSize; y++)
             {
                 Vector2 coords = new Vector2(x * roomScale, y * roomScale);
-                RoomsDict.Add(coords, new RoomBase(coords)); // add new room to dict for every possible coord pair
+                RoomBase roomInstance;
+
+                if (treasureRoomCoords.Contains(coords/roomScale))
+                {
+                    roomInstance = Instantiate(RoomPrefabs[1], transform);
+                }
+                else if (combatRoomCoords.Contains(coords / roomScale))
+                {
+                    roomInstance = Instantiate(RoomPrefabs[2], transform);
+                }
+                else
+                {
+                    roomInstance = Instantiate(RoomPrefabs[0], transform);
+
+                }
+
+                roomInstance.Coords = coords;
+                roomInstance.RoomExits = new bool[] { false, true, false, true };
+
+                roomInstance.SetRoomLocation(roomInstance.Coords);
+                roomInstance.SetExits(roomInstance.RoomExits);
+
+                RoomsDict.Add(coords, roomInstance); // add new room to dict for every possible coord pair
             }
+
         }
 
-    }
-
-    public void VisualiseMap()
-    {
-        foreach (var roomInDict in RoomsDict)
-        {
-            var mapRoomVisualise = GameObject.CreatePrimitive(PrimitiveType.Cube); // create cube
-            mapRoomVisualise.transform.position = new Vector3(roomInDict.Key.x, 0, roomInDict.Key.y); // location coords
-            mapRoomVisualise.transform.localScale = new Vector3(0.9f, 0.5f, 0.9f); // small so can see spaces between
-        }
     }
 }

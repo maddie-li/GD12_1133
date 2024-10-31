@@ -340,10 +340,10 @@ Transform:
   - {fileID: 3449692730370704057}
   - {fileID: 3115956946481538017}
   - {fileID: 8449212136660242115}
-  - {fileID: 8734132387268707014}
   - {fileID: 3715279905023134500}
-  - {fileID: 2210984367621457651}
   - {fileID: 7870514955070538298}
+  - {fileID: 8734132387268707014}
+  - {fileID: 2210984367621457651}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8232408978907092906
@@ -358,10 +358,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d7120b4844a53445befd65b287d9c90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NorthDoor: {fileID: 1765781257630582288}
-  EastDoor: {fileID: 5059702335630020366}
-  SouthDoor: {fileID: 5925572658563567602}
-  WestDoor: {fileID: 3864366931806309319}
+  Coords: {x: 0, y: 0}
+  RoomExits: 
+  NorthWall: {fileID: 1765781257630582288}
+  EastWall: {fileID: 5059702335630020366}
+  SouthWall: {fileID: 5925572658563567602}
+  WestWall: {fileID: 3864366931806309319}
 --- !u!1001 &824733181711526542
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -397,10 +399,6 @@ PrefabInstance:
     - target: {fileID: 8234785004551825480, guid: a4dfa82354f0dc043b57969efb42d597, type: 3}
       propertyPath: m_LocalPosition.z
       value: -0.4772
-      objectReference: {fileID: 0}
-    - target: {fileID: 8740228240383548455, guid: a4dfa82354f0dc043b57969efb42d597, type: 3}
-      propertyPath: m_Mesh
-      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 9126479021210877170, guid: a4dfa82354f0dc043b57969efb42d597, type: 3}
       propertyPath: m_SelectedEditorRenderState
@@ -536,10 +534,6 @@ PrefabInstance:
     - target: {fileID: 8234785004551825480, guid: a4dfa82354f0dc043b57969efb42d597, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 90
-      objectReference: {fileID: 0}
-    - target: {fileID: 8740228240383548455, guid: a4dfa82354f0dc043b57969efb42d597, type: 3}
-      propertyPath: m_Mesh
-      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 9126479021210877170, guid: a4dfa82354f0dc043b57969efb42d597, type: 3}
       propertyPath: m_SelectedEditorRenderState
@@ -790,10 +784,6 @@ PrefabInstance:
     - target: {fileID: 8234785004551825480, guid: a4dfa82354f0dc043b57969efb42d597, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 90
-      objectReference: {fileID: 0}
-    - target: {fileID: 8740228240383548455, guid: a4dfa82354f0dc043b57969efb42d597, type: 3}
-      propertyPath: m_Mesh
-      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 9126479021210877170, guid: a4dfa82354f0dc043b57969efb42d597, type: 3}
       propertyPath: m_SelectedEditorRenderState
