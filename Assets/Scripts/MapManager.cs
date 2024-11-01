@@ -5,7 +5,7 @@ using UnityEngine;
 public class MapManager : MonoBehaviour
 {
     int mapSize = 3;
-    int roomScale = 10;
+    int roomScale = 20;
 
     // roomsdict
     public static Dictionary<Vector2, RoomBase> RoomsDict = new (); // coord : room dict
