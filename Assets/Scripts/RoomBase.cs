@@ -7,14 +7,14 @@ public class RoomBase : MonoBehaviour
     public Vector2 Coords;
     public bool[] RoomExits;
 
-    [SerializeField] private GameObject NorthWall, EastWall, SouthWall, WestWall;
+    // [SerializeField] private GameObject NorthWall, EastWall, SouthWall, WestWall;
 
     public void SetRoomLocation(Vector2 coords)
     {
         transform.position = new Vector3(coords[0], 0, coords[1]); // location coords
     }
 
-    public void SetExits(bool[] roomExits)
+    /*public void SetExits(bool[] roomExits)
     {
         // doors to iterate through
         GameObject[] RoomSides= { NorthWall, EastWall, SouthWall, WestWall };
@@ -29,6 +29,32 @@ public class RoomBase : MonoBehaviour
 
             arrayIndex += 1;
         }
+        
+    }*/
+
+
+    public void OnRoomEnter()
+    {
+        Debug.Log($"Entering {name}!");
+    }
+
+    public void OnRoomExit()
+    {
+        Debug.Log($"Exiting {name}!");
+    }
+
+    public void OnRoomStay()
+    {
+        float isInteracting = Input.GetAxis("Interact");
+
+        if (isInteracting > 0)
+        {
+            Debug.Log($"Searching {name}!");
+        }
+    }
+
+    public void Update()
+    {
         
     }
 

@@ -5,12 +5,14 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private MapManager GameMapPrefab;
-    [SerializeField] private PlayerController PlayerControllerPrefab;
+    [SerializeField] private PlayerController PlayerPrefab;
 
     private MapManager _gameMap;
     private PlayerController _playerController;
 
-    [SerializeField] Vector3 playerStartPos = new Vector3(0, 10, 0);
+    [SerializeField] Vector3 playerStartPos;
+
+    [SerializeField] bool makeMap;
 
     public void Start()
     {
@@ -29,8 +31,11 @@ public class GameManager : MonoBehaviour
         _gameMap = Instantiate(GameMapPrefab, transform);
         _gameMap.transform.position = Vector3.zero;
 
-        // create the map
-        _gameMap.CreateMap();
+
+        if (makeMap)
+        {
+            _gameMap.CreateMap();
+        }
 
         Debug.Log("GameManager: Done SetupMap");
     }
@@ -40,13 +45,13 @@ public class GameManager : MonoBehaviour
         Debug.Log("GameManager: SpawnPlayer");
 
         // create player
-        _playerController = Instantiate(PlayerControllerPrefab, transform);
+        _playerController = Instantiate(PlayerPrefab, transform);
 
         _playerController.transform.position = playerStartPos;
 
-        _playerController.Setup();
-
         Debug.Log("GameManager: Done SpawnPlayer");
     }
-   
+
+    
+
 }

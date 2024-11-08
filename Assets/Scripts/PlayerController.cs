@@ -4,86 +4,116 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private Dictionary<Direction, int> _rotationByDirection = new()
+    [SerializeField] private float MoveSpeed = 1.0f;
+    [SerializeField] private float SprintSpeed = 1.0f;
+    [SerializeField] private float RotationSpeed = 10f;
+
+    [SerializeField] private Transform PlayerHead;
+
+    private Rigidbody physicsBody;
+
+    private float horizontalFacing = 0f;
+    private float verticalFacing = 0f;
+
+    private float defaultMoveSpeed = 0f;
+
+    private RoomBase currentRoom = null;
+
+    private void Start()
     {
-        { Direction.north, 0 },
-        { Direction.east, 90 },
-        { Direction.south, 180 },
-        { Direction.west, 270 },
-    };
+        // init rigidbody
+        physicsBody = GetComponent<Rigidbody>();
 
-    private Direction _facingDirection;
+        // setup cursor
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
 
-    public void Setup()
-    {
-        _facingDirection = Direction.north;
-        SetFacingDirection();
-    }
+        // freeze rigidbody rotation
+        physicsBody.freezeRotation = true;
 
-    private void SetFacingDirection()
-    {
-        Vector3 facing = transform.rotation.eulerAngles;
-        // set y
-        facing.y = _rotationByDirection[_facingDirection];
+        // set default move speed
+        defaultMoveSpeed = MoveSpeed;
 
-        // save rotation as quaternion
-        transform.rotation = Quaternion.Euler(facing);
     }
 
     private void Update()
     {
-        bool rotateLeft = Input.GetKeyDown(KeyCode.A);
-        bool rotateRight = Input.GetKeyDown(KeyCode.D);
-
-        if (rotateLeft && !rotateRight)
-        {
-            Debug.Log("Left");
-            TurnLeft();
-        }
-        else if (rotateRight && !rotateLeft)
-        {
-            Debug.Log("Right");
-            TurnRight();
-        }
-        SetFacingDirection();
+        MoveCameraWithMouse();
+        CheckIfSprinting();
     }
 
-    private void TurnLeft()
+    private void FixedUpdate()
     {
-        switch (_facingDirection)
-        {
-            case Direction.north:
-                _facingDirection = Direction.west;
-                break;
-            case Direction.south:
-                _facingDirection = Direction.east;
-                break;
-            case Direction.east:
-                _facingDirection = Direction.north;
-                break;
-            case Direction.west:
-                _facingDirection = Direction.south;
-                break;
-        }
+        MoveWithPhysics();
     }
 
-    private void TurnRight()
+    private void MoveCameraWithMouse()
     {
-        switch (_facingDirection)
+        // get mouse input
+        float mouseX = Input.GetAxis("Mouse X") * RotationSpeed * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * RotationSpeed * Time.deltaTime;
+
+        // calculate and clamp pitch
+        verticalFacing -= mouseY;
+        verticalFacing = Mathf.Clamp(verticalFacing, -90f, 90f);
+
+        horizontalFacing += mouseX;
+
+        // make vertical movement camera
+        PlayerHead.localRotation = Quaternion.Euler(verticalFacing, 0f, 0f);
+        // make horizontal movement body
+        physicsBody.rotation = Quaternion.Euler(0f, horizontalFacing, 0f);
+
+    }
+
+    private void MoveWithPhysics()
+    {
+        // get wasd
+        float moveX = Input.GetAxis("Horizontal");
+        float moveZ = Input.GetAxis("Vertical");
+
+        // calculate direction relative to orientation
+        Vector3 moveDirection = transform.right * moveX + transform.forward * moveZ;
+
+        // apply velocity movement to rigidbody
+        Vector3 velocity = moveDirection * MoveSpeed;
+        // preserve y velocity
+        physicsBody.velocity = new Vector3(velocity.x, physicsBody.velocity.y, velocity.z);
+
+    }
+
+    private void CheckIfSprinting()
+    {
+        float isSprinting = Input.GetAxis("Sprint");
+
+        if (isSprinting > 0)
         {
-            case Direction.north:
-                _facingDirection = Direction.east;
-                break;
-            case Direction.south:
-                _facingDirection = Direction.west;
-                break;
-            case Direction.east:
-                _facingDirection = Direction.south;
-                break;
-            case Direction.west:
-                _facingDirection = Direction.north;
-                break;
+            MoveSpeed = SprintSpeed;
         }
+        else
+        {
+            MoveSpeed = defaultMoveSpeed;
+        }
+
+        
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        currentRoom = other.GetComponent <RoomBase>();
+        currentRoom.OnRoomEnter();
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        currentRoom = other.GetComponent<RoomBase>();
+        currentRoom.OnRoomExit();
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        currentRoom = other.GetComponent<RoomBase>();
+        currentRoom.OnRoomStay();
     }
 
 }
