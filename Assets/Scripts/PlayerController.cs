@@ -9,20 +9,34 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float RotationSpeed = 10f;
 
     [SerializeField] private Transform PlayerHead;
+    [SerializeField] private Camera cameraView;
+
 
     private Rigidbody physicsBody;
+    private UI_Prompt prompt;
 
     private float horizontalFacing = 0f;
     private float verticalFacing = 0f;
 
     private float defaultMoveSpeed = 0f;
 
+    // aim 
+    private float defaultFOV = 60f;
+    private float currentFOV = 0f;
+    private float aimFOV = 45f;
+    private float aimTime = 0.1f;
+    private float aimTimer = 0f;
+
+    // collisions
     private RoomBase currentRoom = null;
+    private PhysicsDoor currentDoor = null;
 
     private void Start()
     {
         // init rigidbody
         physicsBody = GetComponent<Rigidbody>();
+
+        prompt = GetComponent<UI_Prompt>();
 
         // setup cursor
         Cursor.lockState = CursorLockMode.Locked;
@@ -39,7 +53,20 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         MoveCameraWithMouse();
-        CheckIfSprinting();
+        CheckInput();
+    }
+
+    private void CheckInput()
+    {
+        float isInteracting = Input.GetAxis("Interact"); // PRESS E
+        Interact(isInteracting);
+
+        float isSprinting = Input.GetAxis("Sprint"); // PRESS LEFT SHIFT
+        Sprint(isSprinting);
+        
+
+        float isAiming = Input.GetAxis("Fire2");
+        Aim(isAiming);
     }
 
     private void FixedUpdate()
@@ -82,10 +109,23 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    private void CheckIfSprinting()
+    private void Interact(float isInteracting)
     {
-        float isSprinting = Input.GetAxis("Sprint");
+        if (isInteracting > 0)
+        {
+            if (currentDoor != null) // unlocks door
+            {
+                currentDoor.Lock(false);
+            }
+            else if (currentRoom != null) // displays room search
+            {
+                currentRoom.SearchRoom();
+            }
+        }
+    }
 
+    private void Sprint(float isSprinting)
+    {
         if (isSprinting > 0)
         {
             MoveSpeed = SprintSpeed;
@@ -95,25 +135,56 @@ public class PlayerController : MonoBehaviour
             MoveSpeed = defaultMoveSpeed;
         }
 
-        
     }
+
+    private void Aim(float isAiming)
+    {
+        if (isAiming > 0) // if is aiming
+        {
+            currentFOV = Mathf.Lerp(defaultFOV, aimFOV, aimTimer / aimTime);
+            aimTimer += Time.deltaTime;
+            cameraView.fieldOfView = currentFOV;
+
+            if (aimTime < aimTimer)
+            {
+                cameraView.fieldOfView = aimFOV;
+            }
+
+        }
+        else
+        {
+            cameraView.fieldOfView = defaultFOV;
+            aimTimer = 0f;
+        }
+    } 
 
     private void OnTriggerEnter(Collider other)
     {
-        currentRoom = other.GetComponent <RoomBase>();
-        currentRoom.OnRoomEnter();
+        if (other.gameObject.CompareTag("Door"))
+        {
+            currentDoor = other.transform.parent.GetComponent<PhysicsDoor>();
+            prompt.ActivateDoorPrompt();
+        }
+        if (other.gameObject.CompareTag("Room"))
+        {
+            currentRoom = other.GetComponent<RoomBase>();
+            currentRoom.OnRoomEnter();
+            
+        }
+
     }
 
     private void OnTriggerExit(Collider other)
     {
-        currentRoom = other.GetComponent<RoomBase>();
-        currentRoom.OnRoomExit();
-    }
+        if (other.gameObject.CompareTag("Door"))
+        {
+            currentDoor = null;
+        }
+        if (other.gameObject.CompareTag("Room"))
+        {
+            currentRoom = null;
+        }
 
-    private void OnTriggerStay(Collider other)
-    {
-        currentRoom = other.GetComponent<RoomBase>();
-        currentRoom.OnRoomStay();
     }
 
 }

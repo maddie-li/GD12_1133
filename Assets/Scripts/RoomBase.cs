@@ -43,14 +43,9 @@ public class RoomBase : MonoBehaviour
         Debug.Log($"Exiting {name}!");
     }
 
-    public void OnRoomStay()
+    public void SearchRoom()
     {
-        float isInteracting = Input.GetAxis("Interact");
-
-        if (isInteracting > 0)
-        {
-            Debug.Log($"Searching {name}!");
-        }
+        Debug.Log($"Searching {name}!");
     }
 
     public void Update()

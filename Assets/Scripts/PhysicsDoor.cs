@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PhysicsDoor : MonoBehaviour
 {
-    Rigidbody rigidbody;
+    new Rigidbody rigidbody;
 
     [SerializeField] bool startLockedState;
 
@@ -15,10 +15,10 @@ public class PhysicsDoor : MonoBehaviour
         Lock(startLockedState);
     }
 
-    private void Lock(bool doorLock)
+    public void Lock(bool doorLock)
     {
         rigidbody.freezeRotation = doorLock;
-
+        Debug.Log(doorLock);
     }
 
     // Update is called once per frame

@@ -7,17 +7,21 @@ public class GameManager : MonoBehaviour
     [SerializeField] private MapManager GameMapPrefab;
     [SerializeField] private PlayerController PlayerPrefab;
 
-    private MapManager _gameMap;
-    private PlayerController _playerController;
+    [SerializeField] private UI_Manager uiManager;
+
+    private MapManager gameMap;
+    private PlayerController playerController;
 
     [SerializeField] Vector3 playerStartPos;
 
     [SerializeField] bool makeMap;
 
-    public void Start()
+    public void OnStartGame()
     {
-        Debug.Log("GameManager: Start");
         transform.position = Vector3.zero;
+
+        uiManager.ActivateHUD();
+        Debug.Log("GameManager: ActivatedHUD");
 
         SetupMap();
         SpawnPlayer();
@@ -26,30 +30,24 @@ public class GameManager : MonoBehaviour
 
     public void SetupMap()
     {
-        Debug.Log("GameManager: SetupMap");
         // create instance of map manager
-        _gameMap = Instantiate(GameMapPrefab, transform);
-        _gameMap.transform.position = Vector3.zero;
+        gameMap = Instantiate(GameMapPrefab);
+        gameMap.transform.position = Vector3.zero;
 
 
         if (makeMap)
         {
-            _gameMap.CreateMap();
+            gameMap.CreateMap();
         }
 
-        Debug.Log("GameManager: Done SetupMap");
     }
 
     public void SpawnPlayer()
     {
-        Debug.Log("GameManager: SpawnPlayer");
-
         // create player
-        _playerController = Instantiate(PlayerPrefab, transform);
+        playerController = Instantiate(PlayerPrefab);
+        playerController.transform.position = playerStartPos;
 
-        _playerController.transform.position = playerStartPos;
-
-        Debug.Log("GameManager: Done SpawnPlayer");
     }
 
     
