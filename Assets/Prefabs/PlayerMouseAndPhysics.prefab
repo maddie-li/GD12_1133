@@ -50,9 +50,10 @@ MonoBehaviour:
   MoveSpeed: 7
   SprintSpeed: 10
   RotationSpeed: 500
-  PlayerHead: {fileID: 7788383859483163500}
+  playerHead: {fileID: 7788383859483163500}
   cameraView: {fileID: 4678626088536790083}
-  aim: {fileID: 0}
+  promptText: {fileID: 762240400514111311, guid: 31ea31d0bc03d5747954026c8ef9a245, type: 3}
+  playerInfo: {fileID: 4955777084019270306, guid: 3eb83744b0a93994e8f6ee5b125b552d, type: 3}
 --- !u!54 &3642903770105478192
 Rigidbody:
   m_ObjectHideFlags: 0

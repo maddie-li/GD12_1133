@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class UI_Manager : MonoBehaviour
 {
     [SerializeField] private GameObject[] Layouts;
+
+    public TextMeshProUGUI displayPrompt;
 
     private enum MenuLayouts
     {
@@ -33,13 +36,21 @@ public class UI_Manager : MonoBehaviour
 
     public void ActivateHUD()
     {
-        Debug.Log("UIManager: ActivatedHUD");
         SetLayout(MenuLayouts.HUD);
     }
 
     public void ActivatePause()
     {
         SetLayout(MenuLayouts.Pause);
+    }
+    public void ActivateDoorPrompt()
+    {
+        displayPrompt.text = "[E] Open";
+    }
+
+    public void DeactivatePrompt()
+    {
+        displayPrompt.text = "";
     }
 
 

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
@@ -8,12 +9,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float SprintSpeed = 1.0f;
     [SerializeField] private float RotationSpeed = 10f;
 
-    [SerializeField] private Transform PlayerHead;
+    [SerializeField] private Transform playerHead;
     [SerializeField] private Camera cameraView;
 
+    [SerializeField] private UI_Manager uiManager;
 
     private Rigidbody physicsBody;
-    private UI_Prompt prompt;
 
     private float horizontalFacing = 0f;
     private float verticalFacing = 0f;
@@ -36,8 +37,6 @@ public class PlayerController : MonoBehaviour
         // init rigidbody
         physicsBody = GetComponent<Rigidbody>();
 
-        prompt = GetComponent<UI_Prompt>();
-
         // setup cursor
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -48,12 +47,20 @@ public class PlayerController : MonoBehaviour
         // set default move speed
         defaultMoveSpeed = MoveSpeed;
 
+        // clear prompt
+        uiManager.DeactivatePrompt();
+
     }
 
     private void Update()
     {
         MoveCameraWithMouse();
         CheckInput();
+    }
+
+    public void SetUIReference(UI_Manager reference)
+    {
+        uiManager = reference;
     }
 
     private void CheckInput()
@@ -87,7 +94,7 @@ public class PlayerController : MonoBehaviour
         horizontalFacing += mouseX;
 
         // make vertical movement camera
-        PlayerHead.localRotation = Quaternion.Euler(verticalFacing, 0f, 0f);
+        playerHead.localRotation = Quaternion.Euler(verticalFacing, 0f, 0f);
         // make horizontal movement body
         physicsBody.rotation = Quaternion.Euler(0f, horizontalFacing, 0f);
 
@@ -163,7 +170,11 @@ public class PlayerController : MonoBehaviour
         if (other.gameObject.CompareTag("Door"))
         {
             currentDoor = other.transform.parent.GetComponent<PhysicsDoor>();
-            prompt.ActivateDoorPrompt();
+            if (currentDoor.isLocked)
+            {
+                uiManager.ActivateDoorPrompt();
+            }
+            
         }
         if (other.gameObject.CompareTag("Room"))
         {
@@ -179,6 +190,7 @@ public class PlayerController : MonoBehaviour
         if (other.gameObject.CompareTag("Door"))
         {
             currentDoor = null;
+            uiManager.DeactivatePrompt();
         }
         if (other.gameObject.CompareTag("Room"))
         {

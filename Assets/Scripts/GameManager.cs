@@ -47,6 +47,7 @@ public class GameManager : MonoBehaviour
         // create player
         playerController = Instantiate(PlayerPrefab);
         playerController.transform.position = playerStartPos;
+        playerController.SetUIReference(uiManager);
 
     }
 

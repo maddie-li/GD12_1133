@@ -8,6 +8,8 @@ public class PhysicsDoor : MonoBehaviour
 
     [SerializeField] bool startLockedState;
 
+    public bool isLocked;
+
     private void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
@@ -17,6 +19,7 @@ public class PhysicsDoor : MonoBehaviour
 
     public void Lock(bool doorLock)
     {
+        isLocked = doorLock;
         rigidbody.freezeRotation = doorLock;
         Debug.Log(doorLock);
     }
