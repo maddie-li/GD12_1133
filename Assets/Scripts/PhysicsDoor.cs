@@ -21,7 +21,7 @@ public class PhysicsDoor : MonoBehaviour
     {
         isLocked = doorLock;
         rigidbody.freezeRotation = doorLock;
-        Debug.Log(doorLock);
+        //Debug.Log(doorLock);
     }
 
     // Update is called once per frame

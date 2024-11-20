@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Camera cameraView;
 
     [SerializeField] private UI_Manager uiManager;
+    [SerializeField] private PlayerInfo playerInfo;
 
     private Rigidbody physicsBody;
 
@@ -20,6 +21,8 @@ public class PlayerController : MonoBehaviour
     private float verticalFacing = 0f;
 
     private float defaultMoveSpeed = 0f;
+
+    public bool isPaused = false;
 
     // aim 
     private float defaultFOV = 60f;
@@ -49,6 +52,10 @@ public class PlayerController : MonoBehaviour
 
         // clear prompt
         uiManager.DeactivatePrompt();
+        uiManager.SetReticle(0);
+
+        // set health
+        playerInfo.playerHealth = 100;
 
     }
 
@@ -58,9 +65,10 @@ public class PlayerController : MonoBehaviour
         CheckInput();
     }
 
-    public void SetUIReference(UI_Manager reference)
+    public void SetReferences(UI_Manager uiReference, PlayerInfo playerInfoReference)
     {
-        uiManager = reference;
+        uiManager = uiReference;
+        playerInfo = playerInfoReference;
     }
 
     private void CheckInput()
@@ -70,10 +78,16 @@ public class PlayerController : MonoBehaviour
 
         float isSprinting = Input.GetAxis("Sprint"); // PRESS LEFT SHIFT
         Sprint(isSprinting);
-        
 
-        float isAiming = Input.GetAxis("Fire2");
+        bool isExiting = Input.GetKeyDown("escape"); // PRESS ESCAPE
+        Pause(isExiting);
+
+        bool testInteract = Input.GetKeyDown("v"); // PRESS V
+        Test(testInteract);
+
+        float isAiming = Input.GetAxis("Fire2"); // RIGHT CLICK
         Aim(isAiming);
+
     }
 
     private void FixedUpdate()
@@ -97,6 +111,8 @@ public class PlayerController : MonoBehaviour
         playerHead.localRotation = Quaternion.Euler(verticalFacing, 0f, 0f);
         // make horizontal movement body
         physicsBody.rotation = Quaternion.Euler(0f, horizontalFacing, 0f);
+
+        uiManager.UpdateRadar(horizontalFacing);
 
     }
 
@@ -144,6 +160,45 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    private void Pause(bool isExiting)
+    {
+        if (isExiting)
+        {
+            if (!isPaused)
+            {
+                uiManager.ActivatePause();
+                isPaused = true;
+            }
+            else
+            {
+                uiManager.ActivateHUD();
+                isPaused = false;
+            }
+
+        }
+
+    }
+
+    private void Test(bool isTesting)
+    {
+        if (isTesting)
+        {
+            if (!isPaused)
+            {
+                uiManager.ActivateCombat();
+                
+                isPaused = true;
+            }
+            else
+            {
+                uiManager.ActivateHUD();
+                isPaused = false;
+            }
+
+        }
+
+    }
+
     private void Aim(float isAiming)
     {
         if (isAiming > 0) // if is aiming
@@ -157,11 +212,16 @@ public class PlayerController : MonoBehaviour
                 cameraView.fieldOfView = aimFOV;
             }
 
+
+            uiManager.SetReticle(1);
+
         }
         else
         {
             cameraView.fieldOfView = defaultFOV;
             aimTimer = 0f;
+
+            uiManager.SetReticle(0);
         }
     } 
 
