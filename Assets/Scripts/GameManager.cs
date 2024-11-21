@@ -8,12 +8,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private MapManager GameMapPrefab;
     [SerializeField] private PlayerController PlayerPrefab;
     [SerializeField] private UI_Manager CanvasPrefab;
-    [SerializeField] private GameObject PixelRendererPrefab;
     [SerializeField] private PlayerInfo playerInfo;
 
     private MapManager gameMap;
     private UI_Manager uiManager;
-    private GameObject pixelRenderer;
     private PlayerController playerController;
 
     [SerializeField] Vector3 playerStartPos;
@@ -27,8 +25,6 @@ public class GameManager : MonoBehaviour
        
         uiManager.SetManager(this);
         uiManager.ActivateMainMenu();
-
-        pixelRenderer = Instantiate(PixelRendererPrefab, transform);
     }
 
     public void OnStartButton()

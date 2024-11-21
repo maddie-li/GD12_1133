@@ -7,41 +7,55 @@ using UnityEngine.UI;
 public class WeaponSelection : MonoBehaviour
 {
     [SerializeField] private GameObject FramePrefab;
+    [SerializeField] private Item[] GameWeapons;
 
-    public string[] Weapons;
+    [SerializeField] private PlayerInfo playerInfo;
+
+    List<Item> weaponsInInventory = new List<Item>();
     private List<GameObject> WeaponsFrames = new List<GameObject>();
 
     GameObject frameInstance;
     TextMeshProUGUI label;
+    RawImage icon;
 
     public void ShowWeaponSelection(bool screenTypeHUD)
     {
-
-        Debug.Log($"Setting weapon UI for HUD: {screenTypeHUD}");
-
-        Weapons = new string[3] { "knife", "pistol", "shotgun"};
-
         ClearFrames();
 
-        transform.localPosition = SetPosition(screenTypeHUD);
-        transform.localScale = SetScale(screenTypeHUD);
+        CheckforWeapons();
 
         int frameIndexer = 0;
 
-        for (int i = 0; i < Weapons.Length; i++)
+        foreach (Item w in weaponsInInventory)
         {
-
             frameInstance = Instantiate(FramePrefab, transform);
-            frameInstance.transform.localPosition = new Vector3(i * 150, 0f, 0f);
 
             WeaponsFrames.Add(frameInstance); // add to list
 
+            // label
             label = frameInstance.GetComponentInChildren<TextMeshProUGUI>();
+            label.text = w.itemName;/*
 
-            label.text = Weapons[i];
+            // make it readable when in HUD
+            if (screenTypeHUD)
+            {
+                label.transform.localScale = new Vector3(2, 2, 2);
+            }*/
 
-            frameIndexer += 1;
-            Debug.Log($"Instantiated Frame {i}: {label.text} at {frameInstance.transform.localPosition} from {frameInstance.transform.parent.transform.parent}!");
+            // icon
+            icon = frameInstance.GetComponentInChildren<RawImage>();
+            icon.texture = w.image;
+            
+        }
+    }
+
+    private void CheckforWeapons()
+    {
+        List<Item> inventory = playerInfo.playerInventory;
+
+        foreach (Item i in inventory)
+        {
+            weaponsInInventory.Add(i);
         }
     }
 
@@ -52,31 +66,7 @@ public class WeaponSelection : MonoBehaviour
             Destroy(frame);
         }
         WeaponsFrames.Clear();
-    }
 
-    private Vector3 SetPosition(bool screenTypeHUD)
-    {
-        if (screenTypeHUD)
-        {
-            float contentsoffset = Weapons.Length * -25;
-            return new Vector3(contentsoffset, 0, 0);
-        }
-        else
-        {
-            float contentsoffset = Weapons.Length * -75 / 2;
-            return new Vector3(contentsoffset, 0, 0);
-        }
-    }
-
-    private Vector3 SetScale(bool screenTypeHUD)
-    {
-        if (screenTypeHUD)
-        {
-            return new Vector3(0.5f, 0.5f, 0.5f);
-        }
-        else
-        {
-            return new Vector3(1, 1, 1);
-        }
+        weaponsInInventory.Clear();
     }
 }

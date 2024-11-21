@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class MapManager : MonoBehaviour
 {
@@ -12,10 +14,11 @@ public class MapManager : MonoBehaviour
     // roomsdict
     public static Dictionary<Vector2, RoomBase> RoomsDict = new (); // coord : room dict
 
-    // roomtypes
-
     // prefabs
     [SerializeField] private RoomBase[] RoomPrefabs;
+
+    // navmesh
+    private NavMeshSurface navMesh;
 
     public void CreateMap()
     {
@@ -40,5 +43,14 @@ public class MapManager : MonoBehaviour
 
         }
 
+        CreateNavMesh();
+
+    }
+
+    private void CreateNavMesh()
+    {
+        navMesh = GetComponent<NavMeshSurface>();
+       
+        navMesh.BuildNavMesh();
     }
 }

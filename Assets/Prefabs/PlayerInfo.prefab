@@ -44,4 +44,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a49c11e1cc9298e4388bce6b6508f484, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerHealth: 43
+  playerHealth: 75
+  GameItems: []
+  playerInventory:
+  - {fileID: 9071237651324540163, guid: fdd1956f2fbf8c14694531ab4f5c9781, type: 3}
+  - {fileID: 9071237651324540163, guid: ddd9ecb0b6954754ca21717b9fa1229d, type: 3}
+  - {fileID: 9071237651324540163, guid: 9301f8367ae4c4a4292019281c608202, type: 3}
+  - {fileID: 9071237651324540163, guid: 42427ae3685b5d0449453d5be9d27f61, type: 3}
+  - {fileID: 9071237651324540163, guid: 6cf146788cab5b14d96c999327e26e65, type: 3}
+  - {fileID: 9071237651324540163, guid: 1acd7ad7e6ee27f4880bd0c6fbe4dd4d, type: 3}

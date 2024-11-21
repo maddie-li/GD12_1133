@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
+using Cinemachine;
 
 public class PlayerController : MonoBehaviour
 {
@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float RotationSpeed = 10f;
 
     [SerializeField] private Transform playerHead;
-    [SerializeField] private Camera cameraView;
+    [SerializeField] private CinemachineVirtualCamera cameraView;
 
     [SerializeField] private UI_Manager uiManager;
     [SerializeField] private PlayerInfo playerInfo;
@@ -21,6 +21,9 @@ public class PlayerController : MonoBehaviour
     private float verticalFacing = 0f;
 
     private float defaultMoveSpeed = 0f;
+
+    private CinemachineBasicMultiChannelPerlin camShake;
+    private float camShakeAmp;
 
     public bool isPaused = false;
 
@@ -56,6 +59,10 @@ public class PlayerController : MonoBehaviour
 
         // set health
         playerInfo.playerHealth = 100;
+
+        // init shake
+        camShake = cameraView.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        camShakeAmp = 0f;
 
     }
 
@@ -114,6 +121,8 @@ public class PlayerController : MonoBehaviour
 
         uiManager.UpdateRadar(horizontalFacing);
 
+        
+
     }
 
     private void MoveWithPhysics()
@@ -129,6 +138,22 @@ public class PlayerController : MonoBehaviour
         Vector3 velocity = moveDirection * MoveSpeed;
         // preserve y velocity
         physicsBody.velocity = new Vector3(velocity.x, physicsBody.velocity.y, velocity.z);
+
+        // do camera shake effect
+        camShakeAmp = velocity.magnitude;
+        
+
+        if (velocity.magnitude == 0) // for idle
+        {
+            camShake.m_AmplitudeGain = 0.9f;
+            camShake.m_FrequencyGain = 0.25f;
+        }
+        else // moving
+        {
+            camShake.m_AmplitudeGain = camShakeAmp / 12;
+            camShake.m_FrequencyGain = camShakeAmp / 5;
+        }
+
 
     }
 
@@ -205,11 +230,11 @@ public class PlayerController : MonoBehaviour
         {
             currentFOV = Mathf.Lerp(defaultFOV, aimFOV, aimTimer / aimTime);
             aimTimer += Time.deltaTime;
-            cameraView.fieldOfView = currentFOV;
+            cameraView.m_Lens.FieldOfView = currentFOV;
 
             if (aimTime < aimTimer)
             {
-                cameraView.fieldOfView = aimFOV;
+                cameraView.m_Lens.FieldOfView = aimFOV;
             }
 
 
@@ -218,7 +243,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            cameraView.fieldOfView = defaultFOV;
+            cameraView.m_Lens.FieldOfView = defaultFOV;
             aimTimer = 0f;
 
             uiManager.SetReticle(0);
@@ -256,6 +281,11 @@ public class PlayerController : MonoBehaviour
         {
             currentRoom = null;
         }
+
+    }
+
+    private void ImpactShake()
+    {
 
     }
 

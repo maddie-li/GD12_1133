@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class PhysicsDoor : MonoBehaviour
 {
     new Rigidbody rigidbody;
+    CinemachineCollisionImpulseSource impulse;
 
     [SerializeField] bool startLockedState;
 
@@ -13,6 +15,7 @@ public class PhysicsDoor : MonoBehaviour
     private void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
+        impulse = GetComponent<CinemachineCollisionImpulseSource>();
 
         Lock(startLockedState);
     }
@@ -21,13 +24,6 @@ public class PhysicsDoor : MonoBehaviour
     {
         isLocked = doorLock;
         rigidbody.freezeRotation = doorLock;
-        //Debug.Log(doorLock);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-
+        impulse.enabled = doorLock;
     }
 }
