@@ -146,15 +146,7 @@ public class EnemyAI : MonoBehaviour
         // fall over
         rb.AddTorque(Vector3.right * 0.5f, ForceMode.Impulse);
 
-        // drop weapon
-        DropWeapon();
-
         // destroy enemy
         Destroy(gameObject, 5f);
-    }
-
-    public void DropWeapon()
-    {
-        
     }
 }

@@ -264,7 +264,7 @@ PrefabInstance:
       objectReference: {fileID: 7859390978266322075, guid: dfd7235eabfd76f489de6a43fd68a9a5, type: 3}
     - target: {fileID: 6754633129591768109, guid: 3f69c9419b0b482458b73fabb6fd966a, type: 3}
       propertyPath: playerHealth
-      value: 10
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 6754633129591768109, guid: 3f69c9419b0b482458b73fabb6fd966a, type: 3}
       propertyPath: playerInventory.Array.size

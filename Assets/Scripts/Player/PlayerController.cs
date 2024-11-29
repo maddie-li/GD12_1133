@@ -35,6 +35,7 @@ public class PlayerController : MonoBehaviour
 
     // GAME
     public bool isPaused = false;
+    public bool isDying = false;
 
     // collisions
     private RoomBase currentRoom = null;
@@ -82,7 +83,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (!uiManager.inCombat)
+        if (!uiManager.inCombat && !isDying)
         {
             MoveCameraWithMouse();
         }
@@ -351,7 +352,11 @@ public class PlayerController : MonoBehaviour
     {
         // destroy detection
         Destroy(enemyDetection);
-        physicsBody.AddTorque(Vector3.right * 0.5f, ForceMode.Impulse);
+        isDying = true;
+
+        Rigidbody physicsHead = playerHead.gameObject.AddComponent<Rigidbody>();
+
+        physicsHead.AddTorque(Vector3.up * 0.1f, ForceMode.Impulse);
     }
 
 }

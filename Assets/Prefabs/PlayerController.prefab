@@ -60,9 +60,10 @@ MonoBehaviour:
   RotationSpeed: 500
   horizontalFacing: 0
   verticalFacing: 0
-  defaultMoveSpeed: 0
+  defaultMoveSpeed: 7
   physicsBody: {fileID: 0}
   isPaused: 0
+  isDying: 0
 --- !u!54 &3642903770105478192
 Rigidbody:
   m_ObjectHideFlags: 0

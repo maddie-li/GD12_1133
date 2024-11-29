@@ -27,6 +27,7 @@ public class UI_Manager : MonoBehaviour
     public TextMeshProUGUI radarText;
     public TextMeshProUGUI enemyText;
     public TextMeshProUGUI objectiveText;
+    public TextMeshProUGUI deathText;
 
     public RawImage reticle;
     private Quaternion radarRotation;

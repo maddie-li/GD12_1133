@@ -33,6 +33,7 @@ public class CombatManager : MonoBehaviour
     public void InitiateCombat()
     {
         uiManager.ActivateDanger();
+        Player.Health = Player.MaxHealth;
         Debug.LogWarning(Enemy.CombatantName);
     }
 
@@ -49,14 +50,15 @@ public class CombatManager : MonoBehaviour
         if (uiManager.HasPickedWeapon == false || Player.CurrentWeapon == null)
         {
             Debug.LogError("No weapon selected");
-            EndCombat(Enemy, Player);
+            uiManager.deathText.text = "you weren't fast enough";
+            EndCombat(Enemy);
         }
         else
         {
             GetDamage();
         }
 
-        if (Player.Health > 0 && Enemy.Health > 0)
+        if (Player.Health > 0 && Enemy.Health > 0 && uiManager.HasPickedWeapon)
         {
             CombatBegin();
         }
@@ -84,11 +86,12 @@ public class CombatManager : MonoBehaviour
 
         if (Enemy.Health <= 0)
         {
-            EndCombat(Player, Enemy);
+            EndCombat(Player);
         }
         else if (Player.Health <= 0)
         {
-            EndCombat(Enemy, Player);
+            uiManager.deathText.text = "you were defeated";
+            EndCombat(Enemy);
         }
     }
 
@@ -173,17 +176,35 @@ public class CombatManager : MonoBehaviour
         EnemyInfo = uiManager.combatantInfos[1];
     }
 
-    public void EndCombat(CombatantInfo winner, CombatantInfo loser)
+    public void EndCombat(CombatantInfo winner)
     {
-        uiManager.ActivateHUD();
 
         if (winner == Player)
         {
+            Player.MaxHealth += 5;
+
+            DropWeapon();
             EnemyObject.Die();
+
+            uiManager.ActivateHUD();
         }
         else
         {
             gameManager.LoseGame();
         }
+    }
+
+    public void DropWeapon()
+    {
+        Debug.Log("Dropping weapon");
+        foreach (Item w in Enemy.Inventory)
+        {
+            if (!Player.Inventory.Contains(w))
+            {
+                Player.Inventory.Add(w);
+                Debug.Log($"Giving player {w}");
+            }
+        }
+        
     }
 }
