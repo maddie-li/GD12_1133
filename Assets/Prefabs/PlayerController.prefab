@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 5778050938934187109}
   - component: {fileID: 544014454990844435}
   - component: {fileID: 3642903770105478192}
+  - component: {fileID: -6302962234892059705}
   m_Layer: 0
-  m_Name: PlayerMouseAndPhysics
+  m_Name: PlayerController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -33,6 +34,7 @@ Transform:
   m_Children:
   - {fileID: 8654213806657432175}
   - {fileID: 5466550668126656572}
+  - {fileID: 6676845194583360462}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &544014454990844435
@@ -47,13 +49,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 007ee5c6337acad4a9081cf2060fb1f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uiManager: {fileID: 0}
+  enemyDetection: {fileID: 0}
+  playerHead: {fileID: 7788383859483163500}
+  cameraView: {fileID: 3902912343670683447}
+  camShake: {fileID: 0}
+  camShakeAmp: 0
   MoveSpeed: 7
   SprintSpeed: 12
   RotationSpeed: 500
-  playerHead: {fileID: 7788383859483163500}
-  cameraView: {fileID: 3902912343670683447}
-  uiManager: {fileID: 0}
-  playerInfo: {fileID: 0}
+  horizontalFacing: 0
+  verticalFacing: 0
+  defaultMoveSpeed: 0
+  physicsBody: {fileID: 0}
   isPaused: 0
 --- !u!54 &3642903770105478192
 Rigidbody:
@@ -82,6 +90,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &-6302962234892059705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 369329232491628888}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91ca1a9eb083b5f4eb2967a81aac13cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inRangeOfEnemy: 0
+  currentEnemy: {fileID: 0}
 --- !u!1 &920101952312409908
 GameObject:
   m_ObjectHideFlags: 0
@@ -165,6 +187,61 @@ Camera:
   m_OcclusionCulling: 0
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!1 &1085734188218897260
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6676845194583360462}
+  - component: {fileID: 6953273037191173186}
+  m_Layer: 0
+  m_Name: Collider
+  m_TagString: Player
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6676845194583360462
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1085734188218897260}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.97, z: 0}
+  m_LocalScale: {x: 1.7081211, y: 3.2112675, z: 1.7081211}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5778050938934187109}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &6953273037191173186
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1085734188218897260}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2103950845215256178
 GameObject:
   m_ObjectHideFlags: 0
@@ -266,7 +343,7 @@ GameObject:
   - component: {fileID: 5466550668126656572}
   m_Layer: 0
   m_Name: PlayerVisualisation
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -10,30 +10,101 @@ public class UI_Manager : MonoBehaviour
 {
 
     private GameManager gameManager;
-    [SerializeField] private PlayerInfo playerInfo;
+    private CombatManager combatManager;
+    private CombatantInfo playerInfo;
 
     [SerializeField] private GameObject[] Layouts;
 
     [SerializeField] private Texture[] Reticles;
     [SerializeField] private GameObject radar;
     [SerializeField] private Image health;
+    [SerializeField] private Image weaponTimerImg;
     [SerializeField] private WeaponSelection[] weaponSelections;
+    [SerializeField] public CombatantInfoUI[] combatantInfos;
 
     public TextMeshProUGUI displayPrompt;
+    public TextMeshProUGUI roomText;
+    public TextMeshProUGUI radarText;
+    public TextMeshProUGUI enemyText;
+    public TextMeshProUGUI objectiveText;
+
     public RawImage reticle;
     private Quaternion radarRotation;
+
+    public bool inCombat;
+    public bool HasPickedWeapon;
+
+    // Timer variables
+    private float combatTimer = 0f;
+    private float combatDuration = 2f;
+
+    private bool isCombatTiming = false;
+
+    private float weaponTimer = 0f;
+    private float weaponDuration = 6f;
+
+    private float weaponProgress = 0f;
+    private bool isWeaponTiming = false;
 
     private enum MenuLayouts
     {
         Main = 0,
         HUD = 1,
         Pause = 2,
-        Combat = 3
+        Danger = 3,
+        Weapon = 4,
+        Death = 5,
     }
 
-    internal void SetManager(GameManager newgameManager)
+    void Update()
     {
-        gameManager = newgameManager;
+        UpdateTimers();
+    }
+
+    void UpdateTimers()
+    {
+        if (isCombatTiming && combatTimer < combatDuration)
+        {
+            combatTimer += Time.unscaledDeltaTime;
+            if (combatTimer >= combatDuration)
+            {
+                isCombatTiming = false;
+                combatManager.CombatBegin();
+            }
+        }
+
+        if (isWeaponTiming && weaponTimer < weaponDuration)
+        {
+            weaponTimer += Time.unscaledDeltaTime;
+
+            weaponProgress = (weaponTimer / weaponDuration);
+            weaponTimerImg.fillAmount = 1 - weaponProgress;
+
+            if (weaponTimer >= weaponDuration)
+            {
+                EndWeaponTimer(false);
+            }
+        }
+    }
+
+    public void SetGameManager(GameManager newGameManager)
+    {
+        gameManager = newGameManager;
+    }
+
+    public void SetPlayerInfo( CombatantInfo newPlayerInfo)
+    {
+        playerInfo = newPlayerInfo;
+
+        for (int i = 0; i < weaponSelections.Length; i++)
+        {
+            weaponSelections[i].SetReferences(playerInfo, this);
+        }
+    }
+
+    public void SetCombatManager(CombatManager newcombatManager)
+    {
+        combatManager = newcombatManager;
     }
 
     public void OnStartButton()
@@ -47,7 +118,6 @@ public class UI_Manager : MonoBehaviour
     {
         Debug.Log("Resume Button");
         gameManager.ResumeGame();
-
         ActivateHUD();
     }
 
@@ -74,9 +144,14 @@ public class UI_Manager : MonoBehaviour
 
     public void ActivateHUD()
     {
+
+        inCombat = false;
+
         SetLayout(MenuLayouts.HUD);
-        weaponSelections[1].ShowWeaponSelection(true);
-       
+
+        weaponSelections[1].ShowWeaponSelection();
+
+
         gameManager.ResumeGame();
     }
 
@@ -86,12 +161,38 @@ public class UI_Manager : MonoBehaviour
         gameManager.PauseGame();
     }
 
-    public void ActivateCombat()
+    public void ActivateWeapon()
     {
-        SetLayout(MenuLayouts.Combat);
-        weaponSelections[0].ShowWeaponSelection(false);
+        HasPickedWeapon = false;
+
+        SetLayout(MenuLayouts.Weapon);
+        weaponSelections[0].ShowWeaponSelection();
         gameManager.SlowGame();
+
+        isWeaponTiming = true;
+        weaponTimer = 0f;
     }
+
+    public void ActivateDanger()
+    {
+        enemyText.text = combatManager.Enemy.CombatantName;
+
+        SetLayout(MenuLayouts.Danger);
+        gameManager.SlowGame();
+
+        isCombatTiming = true;
+        combatTimer = 0f;
+    }
+
+    public void ActivateDeath()
+    {
+        SetLayout(MenuLayouts.Death);
+        gameManager.SlowGame();
+        Debug.LogError("Game ENDED player IS DEAD!!");
+
+
+    }
+
 
     // PROMPTS
     public void ActivateDoorPrompt()
@@ -117,14 +218,14 @@ public class UI_Manager : MonoBehaviour
         radar.transform.rotation = radarRotation;
     }
 
-    // HEALTH
+    // COMBAT
 
-    private void Update()
+    public void EndWeaponTimer(bool hasPickedWeapon)
     {
-        float fillAmount = ((float) playerInfo.playerHealth / (float)100);
-
-        health.fillAmount = fillAmount;
-
+        HasPickedWeapon = hasPickedWeapon;
+        isWeaponTiming = false;
+        weaponTimer = weaponDuration;
+        combatManager.CombatEnd();
     }
 
 }

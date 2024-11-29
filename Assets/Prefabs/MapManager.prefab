@@ -48,15 +48,15 @@ MonoBehaviour:
   roomScale: 40
   GameMapMesh: {fileID: 3412380793412807283, guid: dfd94a8fcbc6fcb4c8d22d2f7fb86d01, type: 3}
   RoomPrefabs:
-  - {fileID: 1262110464905204675, guid: 87b022a9b24272542bac80be6e07b3cb, type: 3}
-  - {fileID: 8857473650998944124, guid: a63bf7b7a49616e4f886d736521e0b5a, type: 3}
-  - {fileID: 2382936772156545146, guid: 87bc6f23945e75342bdf093a6218be86, type: 3}
-  - {fileID: 8649087314493392081, guid: 6e007c0c05d881d4fa05bdc2ae75be83, type: 3}
-  - {fileID: 4201183775480786248, guid: 351dfc6f7ad6b5348b981d7dd3df402c, type: 3}
-  - {fileID: 4783477948556203427, guid: 9ab8e7a6dd870f546950dc868c0925e3, type: 3}
   - {fileID: 9058111013145157021, guid: 39d9c4e136e08774c9db4e18a49eb6e7, type: 3}
+  - {fileID: 8649087314493392081, guid: 6e007c0c05d881d4fa05bdc2ae75be83, type: 3}
+  - {fileID: 1262110464905204675, guid: 87b022a9b24272542bac80be6e07b3cb, type: 3}
   - {fileID: 1317015521892916374, guid: fea0b5842e12a2343abfb078c05dbc98, type: 3}
+  - {fileID: 4201183775480786248, guid: 351dfc6f7ad6b5348b981d7dd3df402c, type: 3}
+  - {fileID: 8857473650998944124, guid: a63bf7b7a49616e4f886d736521e0b5a, type: 3}
   - {fileID: 6670648229389203685, guid: d4707144a2b5e0648a4cb93685707d21, type: 3}
+  - {fileID: 4783477948556203427, guid: 9ab8e7a6dd870f546950dc868c0925e3, type: 3}
+  - {fileID: 2382936772156545146, guid: 87bc6f23945e75342bdf093a6218be86, type: 3}
 --- !u!114 &8006507345614340485
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1327,6 +1327,10 @@ PrefabInstance:
       propertyPath: m_Center.z
       value: -0.3
       objectReference: {fileID: 0}
+    - target: {fileID: 1947672724065379578, guid: db078d59cfa24f745bdaee266e2c43ea, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.118
+      objectReference: {fileID: 0}
     - target: {fileID: 3115956946481538017, guid: db078d59cfa24f745bdaee266e2c43ea, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.25
@@ -1357,7 +1361,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4585175809064940073, guid: db078d59cfa24f745bdaee266e2c43ea, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7071068
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4585175809064940073, guid: db078d59cfa24f745bdaee266e2c43ea, type: 3}
       propertyPath: m_LocalRotation.x
@@ -1365,7 +1369,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4585175809064940073, guid: db078d59cfa24f745bdaee266e2c43ea, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.7071068
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4585175809064940073, guid: db078d59cfa24f745bdaee266e2c43ea, type: 3}
       propertyPath: m_LocalRotation.z
@@ -1377,7 +1381,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4585175809064940073, guid: db078d59cfa24f745bdaee266e2c43ea, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -90
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4585175809064940073, guid: db078d59cfa24f745bdaee266e2c43ea, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -1390,6 +1394,10 @@ PrefabInstance:
     - target: {fileID: 8209775257600421680, guid: db078d59cfa24f745bdaee266e2c43ea, type: 3}
       propertyPath: m_Name
       value: Room(0,2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8232408978907092906, guid: db078d59cfa24f745bdaee266e2c43ea, type: 3}
+      propertyPath: RoomName
+      value: armory
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -5,27 +5,40 @@ using Cinemachine;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float MoveSpeed = 1.0f;
-    [SerializeField] private float SprintSpeed = 1.0f;
-    [SerializeField] private float RotationSpeed = 10f;
+    // REFERENCES
+    [SerializeField] public UI_Manager uiManager;
+    [SerializeField] private CombatantInfo playerInfo;
+    [SerializeField] private EnemyDetection enemyDetection;
 
-    [SerializeField] private Transform playerHead;
+    // CAMERA
+    [SerializeField] public Transform playerHead;
+
     [SerializeField] private CinemachineVirtualCamera cameraView;
 
-    [SerializeField] private UI_Manager uiManager;
-    [SerializeField] private PlayerInfo playerInfo;
+    public CinemachineBasicMultiChannelPerlin camShake;
+    public float camShakeAmp;
 
-    private Rigidbody physicsBody;
+    [SerializeField] public float MoveSpeed = 1.0f;
+    [SerializeField] public float SprintSpeed = 1.0f;
 
-    private float horizontalFacing = 0f;
-    private float verticalFacing = 0f;
 
-    private float defaultMoveSpeed = 0f;
 
-    private CinemachineBasicMultiChannelPerlin camShake;
-    private float camShakeAmp;
+    [SerializeField] public float RotationSpeed = 10f;
 
+    public float horizontalFacing = 0f;
+    public float verticalFacing = 0f;
+
+    public float defaultMoveSpeed = 0f;
+
+    // PHYSICS
+    public Rigidbody physicsBody;
+
+    // GAME
     public bool isPaused = false;
+
+    // collisions
+    private RoomBase currentRoom = null;
+    private PhysicsDoor currentDoor = null;
 
     // aim 
     private float defaultFOV = 60f;
@@ -34,9 +47,10 @@ public class PlayerController : MonoBehaviour
     private float aimTime = 0.1f;
     private float aimTimer = 0f;
 
-    // collisions
-    private RoomBase currentRoom = null;
-    private PhysicsDoor currentDoor = null;
+    // minimap
+    private Camera minimapCam;
+    private int minimapNoMarker = 1 << 6;
+    private int minimapWithMarker = 1 << 6 | 1 << 8;
 
     private void Start()
     {
@@ -50,29 +64,33 @@ public class PlayerController : MonoBehaviour
         // freeze rigidbody rotation
         physicsBody.freezeRotation = true;
 
-        // set default move speed
-        defaultMoveSpeed = MoveSpeed;
-
         // clear prompt
         uiManager.DeactivatePrompt();
         uiManager.SetReticle(0);
 
-        // set health
-        playerInfo.playerHealth = 100;
-
-        // init shake
+        // assign shake
         camShake = cameraView.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
         camShakeAmp = 0f;
 
+        // assign minimap
+        minimapCam = transform.GetChild(0).GetComponent<Camera>();
+        minimapCam.cullingMask = minimapNoMarker;
+
+        // assign enemy detection
+        enemyDetection = GetComponent<EnemyDetection>();
     }
 
     private void Update()
     {
-        MoveCameraWithMouse();
+        if (!uiManager.inCombat)
+        {
+            MoveCameraWithMouse();
+        }
+
         CheckInput();
     }
 
-    public void SetReferences(UI_Manager uiReference, PlayerInfo playerInfoReference)
+    public void SetReferences(UI_Manager uiReference, CombatantInfo playerInfoReference)
     {
         uiManager = uiReference;
         playerInfo = playerInfoReference;
@@ -80,20 +98,28 @@ public class PlayerController : MonoBehaviour
 
     private void CheckInput()
     {
-        float isInteracting = Input.GetAxis("Interact"); // PRESS E
-        Interact(isInteracting);
 
-        float isSprinting = Input.GetAxis("Sprint"); // PRESS LEFT SHIFT
+        // GETKEY (hold)
+        bool isSprinting = Input.GetKey(KeyCode.LeftShift); // PRESS LEFT SHIFT
         Sprint(isSprinting);
 
-        bool isExiting = Input.GetKeyDown("escape"); // PRESS ESCAPE
+        bool isScanning = Input.GetKey(KeyCode.Space); // PRESS SPACE
+        Scan(isScanning);
+
+        bool isAiming = Input.GetKey(KeyCode.Mouse1); // RIGHT CLICK
+        Aim(isAiming);
+
+        // GETKEYDOWN (tap)
+
+        bool isInteracting = Input.GetKeyDown(KeyCode.E); // PRESS E
+        Interact(isInteracting);
+
+        bool isExiting = Input.GetKeyDown(KeyCode.Escape); // PRESS ESCAPE
         Pause(isExiting);
 
-        bool testInteract = Input.GetKeyDown("v"); // PRESS V
+        bool testInteract = Input.GetKeyDown(KeyCode.V); // PRESS V
         Test(testInteract);
 
-        float isAiming = Input.GetAxis("Fire2"); // RIGHT CLICK
-        Aim(isAiming);
 
     }
 
@@ -102,7 +128,8 @@ public class PlayerController : MonoBehaviour
         MoveWithPhysics();
     }
 
-    private void MoveCameraWithMouse()
+
+    public void MoveCameraWithMouse()
     {
         // get mouse input
         float mouseX = Input.GetAxis("Mouse X") * RotationSpeed * Time.deltaTime;
@@ -121,11 +148,11 @@ public class PlayerController : MonoBehaviour
 
         uiManager.UpdateRadar(horizontalFacing);
 
-        
+
 
     }
 
-    private void MoveWithPhysics()
+    public void MoveWithPhysics()
     {
         // get wasd
         float moveX = Input.GetAxis("Horizontal");
@@ -141,7 +168,7 @@ public class PlayerController : MonoBehaviour
 
         // do camera shake effect
         camShakeAmp = velocity.magnitude;
-        
+
 
         if (velocity.magnitude == 0) // for idle
         {
@@ -153,13 +180,12 @@ public class PlayerController : MonoBehaviour
             camShake.m_AmplitudeGain = camShakeAmp / 12;
             camShake.m_FrequencyGain = camShakeAmp / 5;
         }
-
-
     }
 
-    private void Interact(float isInteracting)
-    {
-        if (isInteracting > 0)
+
+        private void Interact(bool isInteracting)
+          {
+        if (isInteracting)
         {
             if (currentDoor != null) // unlocks door
             {
@@ -172,9 +198,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void Sprint(float isSprinting)
+    private void Sprint(bool isSprinting)
     {
-        if (isSprinting > 0)
+        if (isSprinting)
         {
             MoveSpeed = SprintSpeed;
         }
@@ -210,8 +236,8 @@ public class PlayerController : MonoBehaviour
         {
             if (!isPaused)
             {
-                uiManager.ActivateCombat();
-                
+                uiManager.ActivateWeapon();
+
                 isPaused = true;
             }
             else
@@ -224,9 +250,31 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    private void Aim(float isAiming)
+    private void Scan(bool isScanning)
     {
-        if (isAiming > 0) // if is aiming
+        if (isScanning)
+        {
+            minimapCam.cullingMask = minimapWithMarker;
+            uiManager.radarText.color = Color.green;
+
+            uiManager.radarText.text = "Scanning ...";
+
+
+        }
+        else
+        {
+
+            minimapCam.cullingMask = minimapNoMarker;
+
+            uiManager.radarText.color = Color.grey;
+            uiManager.radarText.text = "[space] to scan.";
+        }
+
+    }
+
+    private void Aim(bool isAiming)
+    {
+        if (isAiming) // if is aiming
         {
             currentFOV = Mathf.Lerp(defaultFOV, aimFOV, aimTimer / aimTime);
             aimTimer += Time.deltaTime;
@@ -248,7 +296,7 @@ public class PlayerController : MonoBehaviour
 
             uiManager.SetReticle(0);
         }
-    } 
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -259,14 +307,15 @@ public class PlayerController : MonoBehaviour
             {
                 uiManager.ActivateDoorPrompt();
             }
-            
+
         }
         if (other.gameObject.CompareTag("Room"))
         {
             currentRoom = other.GetComponent<RoomBase>();
             currentRoom.OnRoomEnter();
-            
+
         }
+
 
     }
 
@@ -281,12 +330,28 @@ public class PlayerController : MonoBehaviour
         {
             currentRoom = null;
         }
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            enemyDetection.inRangeOfEnemy = false;
+
+        }
 
     }
 
-    private void ImpactShake()
+    private void OnTriggerStay(Collider other)
     {
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            enemyDetection.currentEnemy = other.transform.GetComponentInParent<EnemyAI>();
+            enemyDetection.inRangeOfEnemy = true;
+        }
+    }
 
+    public void Die()
+    {
+        // destroy detection
+        Destroy(enemyDetection);
+        physicsBody.AddTorque(Vector3.right * 0.5f, ForceMode.Impulse);
     }
 
 }

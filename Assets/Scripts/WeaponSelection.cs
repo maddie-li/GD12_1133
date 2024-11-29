@@ -7,9 +7,9 @@ using UnityEngine.UI;
 public class WeaponSelection : MonoBehaviour
 {
     [SerializeField] private GameObject FramePrefab;
-    [SerializeField] private Item[] GameWeapons;
 
-    [SerializeField] private PlayerInfo playerInfo;
+    private CombatantInfo playerInfo;
+    private UI_Manager uiManager;
 
     List<Item> weaponsInInventory = new List<Item>();
     private List<GameObject> WeaponsFrames = new List<GameObject>();
@@ -17,14 +17,21 @@ public class WeaponSelection : MonoBehaviour
     GameObject frameInstance;
     TextMeshProUGUI label;
     RawImage icon;
+    Button frame;
 
-    public void ShowWeaponSelection(bool screenTypeHUD)
+
+    public void SetReferences(CombatantInfo newplayerInfo, UI_Manager newuiManager)
+    {
+        playerInfo = newplayerInfo;
+        uiManager = newuiManager;
+
+    }
+
+    public void ShowWeaponSelection()
     {
         ClearFrames();
 
         CheckforWeapons();
-
-        int frameIndexer = 0;
 
         foreach (Item w in weaponsInInventory)
         {
@@ -34,29 +41,33 @@ public class WeaponSelection : MonoBehaviour
 
             // label
             label = frameInstance.GetComponentInChildren<TextMeshProUGUI>();
-            label.text = w.itemName;/*
-
-            // make it readable when in HUD
-            if (screenTypeHUD)
-            {
-                label.transform.localScale = new Vector3(2, 2, 2);
-            }*/
+            label.text = w.itemName;
 
             // icon
             icon = frameInstance.GetComponentInChildren<RawImage>();
             icon.texture = w.image;
-            
+
+            // button
+
+            frame = frameInstance.transform.Find("Frame").GetComponent<Button>();
+            frame.onClick.AddListener(() => FrameSelect(w));
+
+
         }
     }
 
     private void CheckforWeapons()
     {
-        List<Item> inventory = playerInfo.playerInventory;
-
-        foreach (Item i in inventory)
+        if (playerInfo != null)
         {
-            weaponsInInventory.Add(i);
+            List<Item> inventory = playerInfo.Inventory;
+
+            foreach (Item i in inventory)
+            {
+                weaponsInInventory.Add(i);
+            }
         }
+
     }
 
     private void ClearFrames()
@@ -68,5 +79,11 @@ public class WeaponSelection : MonoBehaviour
         WeaponsFrames.Clear();
 
         weaponsInInventory.Clear();
+    }
+
+    public void FrameSelect(Item weapon)
+    {
+        playerInfo.CurrentWeapon = weapon;
+        uiManager.EndWeaponTimer(true);
     }
 }

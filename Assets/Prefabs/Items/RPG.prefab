@@ -68,6 +68,10 @@ PrefabInstance:
       propertyPath: itemname
       value: Pistol
       objectReference: {fileID: 0}
+    - target: {fileID: 7926005667646072777, guid: c1690f67b0f2d0949b1987933835935f, type: 3}
+      propertyPath: maxDamage
+      value: 20
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

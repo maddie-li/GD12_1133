@@ -5,42 +5,29 @@ using UnityEngine;
 public class RoomBase : MonoBehaviour
 {
     public Vector2 Coords;
-    public bool[] RoomExits;
+    private UI_Manager uiManager;
+    [SerializeField] public string RoomName;
 
-    // [SerializeField] private GameObject NorthWall, EastWall, SouthWall, WestWall;
+    public void SetUIManager(UI_Manager newUImanager)
+    {
+        uiManager = newUImanager;
+    }
 
     public void SetRoomLocation(Vector2 coords)
     {
         transform.position = new Vector3(coords[0], 0, coords[1]); // location coords
     }
 
-    /*public void SetExits(bool[] roomExits)
-    {
-        // doors to iterate through
-        GameObject[] RoomSides= { NorthWall, EastWall, SouthWall, WestWall };
-
-        // to match doors with bools
-        int arrayIndex = 0;
-
-        foreach (GameObject side in RoomSides)
-        {
-            // get door from roomside
-            side.transform.GetChild(0).gameObject.SetActive(roomExits[arrayIndex]);
-
-            arrayIndex += 1;
-        }
-        
-    }*/
-
-
     public void OnRoomEnter()
     {
-        Debug.Log($"Entering {name}!");
+        //Debug.Log($"Entering {name}!");
+        uiManager.roomText.text = RoomName;
     }
 
     public void OnRoomExit()
     {
-        Debug.Log($"Exiting {name}!");
+        //Debug.Log($"Exiting {name}!");
+        uiManager.roomText.text = "";
     }
 
     public void SearchRoom()

@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 957207994118408619, guid: c1690f67b0f2d0949b1987933835935f, type: 3}
       propertyPath: m_Name
-      value: Pistol Variant
+      value: Pistol
       objectReference: {fileID: 0}
     - target: {fileID: 3565594847203079718, guid: c1690f67b0f2d0949b1987933835935f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -67,6 +67,10 @@ PrefabInstance:
     - target: {fileID: 7926005667646072777, guid: c1690f67b0f2d0949b1987933835935f, type: 3}
       propertyPath: itemname
       value: Pistol
+      objectReference: {fileID: 0}
+    - target: {fileID: 7926005667646072777, guid: c1690f67b0f2d0949b1987933835935f, type: 3}
+      propertyPath: maxDamage
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

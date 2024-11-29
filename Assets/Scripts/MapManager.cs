@@ -9,6 +9,8 @@ public class MapManager : MonoBehaviour
     int mapSize = 3;
     [SerializeField] float roomScale = 40f;
 
+    private UI_Manager uiManager;
+
     [SerializeField] private GameObject GameMapMesh;
 
     // roomsdict
@@ -38,6 +40,8 @@ public class MapManager : MonoBehaviour
                 roomInstance.SetRoomLocation(roomInstance.Coords);
                 RoomsDict.Add(coords, roomInstance); // add new room to dict for every possible coord pair
 
+                roomInstance.SetUIManager(uiManager);
+
                 roomIndexer += 1;
             }
 
@@ -45,6 +49,11 @@ public class MapManager : MonoBehaviour
 
         CreateNavMesh();
 
+    }
+
+    public void SetUIManager(UI_Manager newUImanager)
+    {
+        uiManager = newUImanager;
     }
 
     private void CreateNavMesh()

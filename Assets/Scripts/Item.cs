@@ -7,17 +7,14 @@ public class Item : MonoBehaviour
     [SerializeField] public Texture image;
     [SerializeField] public string itemName;
 
-    [SerializeField] int maxDamage;
-    private float dealtDamage;
+    [SerializeField] public int maxDamage;
 
-    public void Use()
+    [SerializeField] public bool isHealItem;
+
+    private Roller roller = new Roller();
+
+    public int Hit()
     {
-
-    }
-
-
-    public void Hit()
-    {
-
+        return roller.Roll(maxDamage);
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class OldMapManager : MonoBehaviour
 {
-    int mapSize = 3;
+    /*int mapSize = 3;
     [SerializeField] int roomScale = 40;
 
     // roomsdict
@@ -63,5 +63,5 @@ public class OldMapManager : MonoBehaviour
 
         }
 
-    }
+    }*/
 }
