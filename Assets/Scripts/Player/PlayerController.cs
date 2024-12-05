@@ -40,6 +40,7 @@ public class PlayerController : MonoBehaviour
     // collisions
     private RoomBase currentRoom = null;
     private PhysicsDoor currentDoor = null;
+    private ItemPickup currentItemPickup = null;
 
     // aim 
     private float defaultFOV = 60f;
@@ -192,6 +193,14 @@ public class PlayerController : MonoBehaviour
             {
                 currentDoor.Lock(false);
             }
+            else if (currentItemPickup != null) // displays room search
+            {
+                // add to inventory
+                playerInfo.Inventory.Add(currentItemPickup.item);
+                Destroy(currentItemPickup.gameObject);
+                uiManager.DeactivatePrompt();
+                uiManager.ActivateHUD(); // refresh
+            }
             else if (currentRoom != null) // displays room search
             {
                 currentRoom.SearchRoom();
@@ -310,6 +319,11 @@ public class PlayerController : MonoBehaviour
             }
 
         }
+        if (other.gameObject.CompareTag("Pickup"))
+        {
+            currentItemPickup = other.transform.parent.GetComponent<ItemPickup>();
+            uiManager.ActivatePickupPrompt(currentItemPickup.item);
+        }
         if (other.gameObject.CompareTag("Room"))
         {
             currentRoom = other.GetComponent<RoomBase>();
@@ -327,6 +341,11 @@ public class PlayerController : MonoBehaviour
             currentDoor = null;
             uiManager.DeactivatePrompt();
         }
+        if (other.gameObject.CompareTag("Pickup"))
+        {
+            currentItemPickup = null;
+            uiManager.DeactivatePrompt();
+        }
         if (other.gameObject.CompareTag("Room"))
         {
             currentRoom = null;
@@ -334,7 +353,6 @@ public class PlayerController : MonoBehaviour
         if (other.gameObject.CompareTag("Enemy"))
         {
             enemyDetection.inRangeOfEnemy = false;
-
         }
 
     }

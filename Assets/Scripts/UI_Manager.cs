@@ -201,6 +201,11 @@ public class UI_Manager : MonoBehaviour
         displayPrompt.text = "[E] Open";
     }
 
+    public void ActivatePickupPrompt(Item item)
+    {
+        displayPrompt.text = $"[E] Pick up {item.name}";
+    }
+
     public void DeactivatePrompt()
     {
         displayPrompt.text = "";

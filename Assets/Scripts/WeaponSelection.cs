@@ -48,10 +48,8 @@ public class WeaponSelection : MonoBehaviour
             icon.texture = w.image;
 
             // button
-
             frame = frameInstance.transform.Find("Frame").GetComponent<Button>();
             frame.onClick.AddListener(() => FrameSelect(w));
-
 
         }
     }

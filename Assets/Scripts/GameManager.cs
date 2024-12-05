@@ -1,28 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private MapManager GameMapPrefab;
     [SerializeField] private PlayerController PlayerPrefab;
-    [SerializeField] private UI_Manager CanvasPrefab;
-    [SerializeField] private CombatManager CombatPrefab;
 
-    private MapManager gameMap;
-    private UI_Manager uiManager;
-    private CombatManager combatManager;
-    private PlayerController playerController;
-    private CombatantInfo playerInfo;
-
-    public bool isInCombat = false;
+    private MapManager _gameMap;
+    private PlayerController _playerController;
 
     [SerializeField] Vector3 playerStartPos;
 
-    [SerializeField] private string playerName;
-    [SerializeField] private int playerHealth;
-    [SerializeField] private List<Item> playerInventory;
+    [SerializeField] bool makeMap;
+
+<<<<<<< Updated upstream
+    public void Start()
+    {
+        Debug.Log("GameManager: Start");
+=======
+    public int enemyCount;
 
     // SETUP
     public void Start()
@@ -31,54 +28,64 @@ public class GameManager : MonoBehaviour
         uiManager = Instantiate(CanvasPrefab, transform);
         uiManager.SetGameManager(this); // assign reference
         uiManager.ActivateMainMenu(); // set UI to main menu
+
+        enemyCount = 1;
         
+    }
+
+    private void Update()
+    {
+        Debug.LogWarning(enemyCount);
+
+        if (enemyCount == 0)
+        {
+            WinGame();
+        }
     }
 
     public void OnStartButton()
     {
         DontDestroyOnLoad(gameObject);
 
+>>>>>>> Stashed changes
         transform.position = Vector3.zero;
-
-        SceneManager.LoadScene("MainLevel");
 
         SetupMap();
         SpawnPlayer();
-
-        uiManager.ActivateHUD(); // set UI to HUD
-
-        // INSTANTIATE COMBATMANAGER
-        SetupCombatManager();
 
     }
 
     public void SetupMap()
     {
-        // INSTANTIATE MAPMANAGER
-        gameMap = Instantiate(GameMapPrefab, transform);
-        gameMap.transform.position = Vector3.zero;
+        Debug.Log("GameManager: SetupMap");
+        // create instance of map manager
+        _gameMap = Instantiate(GameMapPrefab, transform);
+        _gameMap.transform.position = Vector3.zero;
 
-        gameMap.SetUIManager(uiManager);
 
-        // CREATE MAP 
-        gameMap.CreateMap();
+        if (makeMap)
+        {
+            _gameMap.CreateMap();
+        }
 
+        Debug.Log("GameManager: Done SetupMap");
     }
 
     public void SpawnPlayer()
     {
-        // setup info
-        playerInfo = new CombatantInfo(playerName, playerHealth,playerInventory);
-        uiManager.SetPlayerInfo(playerInfo); // assign reference
-        Debug.LogWarning("PlayerInfo being assigned to UI Manager");
+        Debug.Log("GameManager: SpawnPlayer");
 
         // create player
-        playerController = Instantiate(PlayerPrefab, transform);
-        playerController.transform.position = playerStartPos;
-        playerController.SetReferences(uiManager, playerInfo);
+        _playerController = Instantiate(PlayerPrefab, transform);
 
+        _playerController.transform.position = playerStartPos;
+
+        Debug.Log("GameManager: Done SpawnPlayer");
     }
 
+<<<<<<< Updated upstream
+    
+=======
 
 
     private void SetupCombatManager()
@@ -96,6 +103,8 @@ public class GameManager : MonoBehaviour
                 enemyAI.SetManagers(combatManager, playerController);
             }
         }
+
+        enemyCount = enemiesInLevel.Length / 2;
     }
 
     // GAME STATE
@@ -138,6 +147,11 @@ public class GameManager : MonoBehaviour
 
         //PauseGame();
 
+    }
+
+    public void WinGame()
+    {
+        Debug.LogError("WON GAME!");
     }
 
     public void ExitGame()

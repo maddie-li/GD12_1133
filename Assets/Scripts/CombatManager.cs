@@ -35,12 +35,18 @@ public class CombatManager : MonoBehaviour
         uiManager.ActivateDanger();
         Player.Health = Player.MaxHealth;
         Debug.LogWarning(Enemy.CombatantName);
+
+        // turns = 0;
     }
 
     public void CombatBegin()
     {
         turns = 0;
+
         uiManager.ActivateWeapon();
+
+        PlayerInfo.damageTaken.gameObject.SetActive(false);
+        EnemyInfo.damageTaken.gameObject.SetActive(false);
     }
 
     public void CombatEnd()
@@ -67,6 +73,8 @@ public class CombatManager : MonoBehaviour
     public void GetDamage()
     {
         turns += 1;
+
+        Debug.LogWarning(turns);
 
         // Randomize enemy weapon
         int _enemyWeaponIndex = roller.Roll(Enemy.Inventory.Count());
@@ -95,67 +103,144 @@ public class CombatManager : MonoBehaviour
         }
     }
 
-    public void DealDamage()
+    /*public void CombatOutcome()
     {
-
         if (Player.CurrentWeapon.isHealItem)
         {
-            Player.Health += playerDamage;
-            Player.Health -= enemyDamage;
-
-            if (turns > 0)
-            {
-                PlayerInfo.damageTaken.gameObject.SetActive(true);
-
-                EnemyInfo.damageTaken.gameObject.SetActive(true);
-
-                int netDamage = playerDamage - enemyDamage;
-
-                if (netDamage > 0)
-                {
-                    PlayerInfo.damageTaken.color = Color.green;
-                    PlayerInfo.damageTaken.text = $"+ {netDamage}";
-                }
-                else if (netDamage == 0)
-                {
-                    PlayerInfo.damageTaken.color = Color.white;
-                    PlayerInfo.damageTaken.text = $"+ 0";
-                }
-                else
-                {
-                    PlayerInfo.damageTaken.color = Color.red;
-                    PlayerInfo.damageTaken.text = $"{netDamage}";
-                }
-
-                EnemyInfo.damageTaken.color = Color.white;
-                EnemyInfo.damageTaken.text = "- 0";
-
-            }
-
+            DoHeal();
         }
         else
         {
-            Enemy.Health -= playerDamage;
-            Player.Health -= enemyDamage;
+            DoDamage();
+        }
+    }*/
 
-            if (turns > 0)
+    /*void DoHeal()
+    {
+        Player.Health += playerDamage;
+        Player.Health -= enemyDamage;
+
+        DisplayDamage(playerDamage - enemyDamage, 0);
+    }
+
+    void DoDamage()
+    {
+        Enemy.Health -= playerDamage;
+        Player.Health -= enemyDamage;
+
+        DisplayDamage(-enemyDamage, -playerDamage);
+    }
+
+    void DisplayDamage(int playerNetDamage, int enemyDamage)
+    {
+        Debug.LogError(turns);
+
+        // hide show
+        if (turns > 0)
+        {
+            PlayerInfo.damageTaken.gameObject.SetActive(true);
+            EnemyInfo.damageTaken.gameObject.SetActive(true);
+        }
+        else
+        {
+            PlayerInfo.damageTaken.gameObject.SetActive(false);
+            EnemyInfo.damageTaken.gameObject.SetActive(false);
+        }
+
+        Debug.Log($"PlayerInfo damageTaken active: {PlayerInfo.damageTaken.gameObject.activeSelf}");
+        Debug.Log($"EnemyInfo damageTaken active: {EnemyInfo.damageTaken.gameObject.activeSelf}");
+
+        // if player heals
+        if (enemyDamage == 0)
+        {
+            EnemyInfo.damageTaken.gameObject.SetActive(false);
+        }
+
+
+        // display player damage
+        if (playerNetDamage > 0)
+        {
+            PlayerInfo.damageTaken.color = Color.green;
+            PlayerInfo.damageTaken.text = $"+ {playerNetDamage}";
+        }
+        else if (playerNetDamage == 0)
+        {
+            PlayerInfo.damageTaken.color = Color.white;
+            PlayerInfo.damageTaken.text = $"+ {playerNetDamage+enemyDamage} - {enemyDamage}";
+        }
+        else
+        {
+            PlayerInfo.damageTaken.color = Color.red;
+            PlayerInfo.damageTaken.text = $"{playerNetDamage}";
+        }
+
+        // display enemy damage
+        EnemyInfo.damageTaken.color = Color.red;
+        EnemyInfo.damageTaken.text = $"{enemyDamage}";
+        
+    }*/
+
+    
+        public void DealDamage()
+        {
+
+            if (Player.CurrentWeapon.isHealItem)
             {
-                PlayerInfo.damageTaken.gameObject.SetActive(true);
-                EnemyInfo.damageTaken.gameObject.SetActive(true);
+                Player.Health += playerDamage;
+                Player.Health -= enemyDamage;
 
-                PlayerInfo.damageTaken.color = Color.red;
-                PlayerInfo.damageTaken.text = $"- {enemyDamage}";
+                if (turns > 0)
+                {
+                    PlayerInfo.damageTaken.gameObject.SetActive(true);
+                    EnemyInfo.damageTaken.gameObject.SetActive(true);
 
-                EnemyInfo.damageTaken.color = Color.red;
-                EnemyInfo.damageTaken.text = $"- {playerDamage}";
+                    int netDamage = playerDamage - enemyDamage;
+
+                    if (netDamage > 0)
+                    {
+                        PlayerInfo.damageTaken.color = Color.green;
+                        PlayerInfo.damageTaken.text = $"+ {netDamage}";
+                    }
+                    else if (netDamage == 0)
+                    {
+                        PlayerInfo.damageTaken.color = Color.white;
+                        PlayerInfo.damageTaken.text = $"+ 0";
+                    }
+                    else
+                    {
+                        PlayerInfo.damageTaken.color = Color.red;
+                        PlayerInfo.damageTaken.text = $"{netDamage}";
+                    }
+
+                    EnemyInfo.damageTaken.color = Color.white;
+                    EnemyInfo.damageTaken.text = "- 0";
+
+                }
+
             }
             else
             {
-                PlayerInfo.damageTaken.gameObject.SetActive(false);
-                EnemyInfo.damageTaken.gameObject.SetActive(false);
+                Enemy.Health -= playerDamage;
+                Player.Health -= enemyDamage;
+
+                if (turns > 0)
+                {
+                    PlayerInfo.damageTaken.gameObject.SetActive(true);
+                    EnemyInfo.damageTaken.gameObject.SetActive(true);
+
+                    PlayerInfo.damageTaken.color = Color.red;
+                    PlayerInfo.damageTaken.text = $"- {enemyDamage}";
+
+                    EnemyInfo.damageTaken.color = Color.red;
+                    EnemyInfo.damageTaken.text = $"- {playerDamage}";
+                }
+                else
+                {
+                    PlayerInfo.damageTaken.gameObject.SetActive(false);
+                    EnemyInfo.damageTaken.gameObject.SetActive(false);
+                }
             }
         }
-    }
 
     public bool GetInCombat()
     {
@@ -186,6 +271,9 @@ public class CombatManager : MonoBehaviour
             DropWeapon();
             EnemyObject.Die();
 
+            gameManager.enemyCount -= 1;
+            Debug.Log($"DEFEATED enemy now there is {gameManager.enemyCount}");
+
             uiManager.ActivateHUD();
         }
         else
@@ -203,8 +291,11 @@ public class CombatManager : MonoBehaviour
             {
                 Player.Inventory.Add(w);
                 Debug.Log($"Giving player {w}");
+
+                uiManager.objectiveText.text = $"Picked up {Enemy.CombatantName}'s {w.itemName}";
             }
         }
+
         
     }
 }

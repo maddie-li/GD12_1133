@@ -56,8 +56,18 @@ public class CombatantInfoUI : MonoBehaviour
 
         foreach (Item item in cmbt.Inventory)
         {
+            string _itemInfo;
 
-            string _itemInfo = $"{item.itemName}: {item.maxDamage} dmg";
+            if (item.isHealItem)
+            {
+                 _itemInfo = $"{item.itemName}: {item.maxDamage} hp";
+            }
+            else
+            {
+                _itemInfo = $"{item.itemName}: {item.maxDamage} dmg";
+            }
+
+             
             _Inventory.Add(_itemInfo);
         }
 
