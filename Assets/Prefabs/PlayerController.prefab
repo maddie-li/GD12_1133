@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 007ee5c6337acad4a9081cf2060fb1f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiManager: {fileID: 0}
+  uiManager: {fileID: 7859390978266322075, guid: dfd7235eabfd76f489de6a43fd68a9a5, type: 3}
   enemyDetection: {fileID: 0}
   playerHead: {fileID: 7788383859483163500}
   cameraView: {fileID: 3902912343670683447}

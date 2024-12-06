@@ -13,11 +13,6 @@ public class CombatantInfo
 
     public Item CurrentWeapon;
 
-    void Update()
-    {
-        Health = Mathf.Clamp(Health, 0, MaxHealth);
-    }
-
     // CONSTRUCTOR
     public CombatantInfo(string combatantName, float health, List<Item> inventory)
     {

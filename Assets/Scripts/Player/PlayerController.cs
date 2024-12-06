@@ -96,6 +96,8 @@ public class PlayerController : MonoBehaviour
     {
         uiManager = uiReference;
         playerInfo = playerInfoReference;
+
+        Debug.LogError("Set Refrences");
     }
 
     private void CheckInput()
@@ -195,11 +197,7 @@ public class PlayerController : MonoBehaviour
             }
             else if (currentItemPickup != null) // displays room search
             {
-                // add to inventory
-                playerInfo.Inventory.Add(currentItemPickup.item);
-                Destroy(currentItemPickup.gameObject);
-                uiManager.DeactivatePrompt();
-                uiManager.ActivateHUD(); // refresh
+                PickupItem(currentItemPickup.item);
             }
             else if (currentRoom != null) // displays room search
             {
@@ -246,7 +244,7 @@ public class PlayerController : MonoBehaviour
         {
             if (!isPaused)
             {
-                uiManager.ActivateWeapon();
+                uiManager.ActivateCombat();
 
                 isPaused = true;
             }
@@ -306,6 +304,17 @@ public class PlayerController : MonoBehaviour
 
             uiManager.SetReticle(0);
         }
+    }
+
+    private void PickupItem (Item item)
+    {
+        // add to inventory
+        playerInfo.Inventory.Add(item);
+        Destroy(currentItemPickup.gameObject);
+        uiManager.DeactivatePrompt();
+        uiManager.ActivateHUD(); // refresh
+        uiManager.objectiveText.text = $"Picked up {item.itemName}";
+        currentItemPickup = null;
     }
 
     private void OnTriggerEnter(Collider other)

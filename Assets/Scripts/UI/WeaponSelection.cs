@@ -15,9 +15,6 @@ public class WeaponSelection : MonoBehaviour
     private List<GameObject> WeaponsFrames = new List<GameObject>();
 
     GameObject frameInstance;
-    TextMeshProUGUI label;
-    RawImage icon;
-    Button frame;
 
 
     public void SetReferences(CombatantInfo newplayerInfo, UI_Manager newuiManager)
@@ -37,19 +34,11 @@ public class WeaponSelection : MonoBehaviour
         {
             frameInstance = Instantiate(FramePrefab, transform);
 
+            WeaponFrame frame = frameInstance.GetComponent<WeaponFrame>();
+
+            frame.Setup(w, this);
+
             WeaponsFrames.Add(frameInstance); // add to list
-
-            // label
-            label = frameInstance.GetComponentInChildren<TextMeshProUGUI>();
-            label.text = w.itemName;
-
-            // icon
-            icon = frameInstance.GetComponentInChildren<RawImage>();
-            icon.texture = w.image;
-
-            // button
-            frame = frameInstance.transform.Find("Frame").GetComponent<Button>();
-            frame.onClick.AddListener(() => FrameSelect(w));
 
         }
     }

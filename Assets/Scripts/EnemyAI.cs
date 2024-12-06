@@ -12,7 +12,6 @@ public class EnemyAI : MonoBehaviour
 
     // NAVIGATION
     private NavMeshAgent Agent;
-    private Rigidbody rb;
 
     [SerializeField] private GameObject PatrolPath;
 
@@ -36,7 +35,6 @@ public class EnemyAI : MonoBehaviour
     public void Start()
     {
         Agent = GetComponent<NavMeshAgent>();
-        rb = GetComponent<Rigidbody>();
 
         MakePath();
         GoToNext();
@@ -143,8 +141,9 @@ public class EnemyAI : MonoBehaviour
         Agent.isStopped = true;
         Agent.enabled = false;
 
+        Rigidbody rigidbody = this.gameObject.AddComponent<Rigidbody>();
         // fall over
-        rb.AddTorque(Vector3.right * 0.5f, ForceMode.Impulse);
+        rigidbody.AddTorque(Vector3.right * 0.5f, ForceMode.Impulse);
 
         // destroy enemy
         Destroy(gameObject, 5f);

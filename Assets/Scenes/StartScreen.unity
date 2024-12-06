@@ -273,15 +273,15 @@ PrefabInstance:
     - target: {fileID: 6754633129591768109, guid: 3f69c9419b0b482458b73fabb6fd966a, type: 3}
       propertyPath: 'playerInventory.Array.data[0]'
       value: 
-      objectReference: {fileID: 9071237651324540163, guid: 42427ae3685b5d0449453d5be9d27f61, type: 3}
+      objectReference: {fileID: 9071237651324540163, guid: 6cf146788cab5b14d96c999327e26e65, type: 3}
     - target: {fileID: 6754633129591768109, guid: 3f69c9419b0b482458b73fabb6fd966a, type: 3}
       propertyPath: 'playerInventory.Array.data[1]'
       value: 
-      objectReference: {fileID: 9071237651324540163, guid: fdd1956f2fbf8c14694531ab4f5c9781, type: 3}
+      objectReference: {fileID: 9071237651324540163, guid: 42427ae3685b5d0449453d5be9d27f61, type: 3}
     - target: {fileID: 6754633129591768109, guid: 3f69c9419b0b482458b73fabb6fd966a, type: 3}
       propertyPath: 'playerInventory.Array.data[2]'
       value: 
-      objectReference: {fileID: 9071237651324540163, guid: 6cf146788cab5b14d96c999327e26e65, type: 3}
+      objectReference: {fileID: 9071237651324540163, guid: fdd1956f2fbf8c14694531ab4f5c9781, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

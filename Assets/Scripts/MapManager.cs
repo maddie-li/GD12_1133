@@ -24,6 +24,8 @@ public class MapManager : MonoBehaviour
 
     public void CreateMap()
     {
+        RoomsDict.Clear();
+
         GameObject mapMesh = Instantiate(GameMapMesh, transform);
 
         int roomIndexer = 0;

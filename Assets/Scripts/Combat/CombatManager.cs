@@ -43,10 +43,7 @@ public class CombatManager : MonoBehaviour
     {
         turns = 0;
 
-        uiManager.ActivateWeapon();
-
-        PlayerInfo.damageTaken.gameObject.SetActive(false);
-        EnemyInfo.damageTaken.gameObject.SetActive(false);
+        uiManager.ActivateCombat();
     }
 
     public void CombatEnd()
@@ -75,6 +72,7 @@ public class CombatManager : MonoBehaviour
         turns += 1;
 
         Debug.LogWarning(turns);
+        Debug.LogWarning(turns);
 
         // Randomize enemy weapon
         int _enemyWeaponIndex = roller.Roll(Enemy.Inventory.Count());
@@ -90,7 +88,7 @@ public class CombatManager : MonoBehaviour
         Debug.LogWarning($"Player used {Player.CurrentWeapon} (max {Player.CurrentWeapon.maxDamage}) for {playerDamage} damage");
         Debug.LogWarning($"Enemy used {Enemy.CurrentWeapon} (max {Enemy.CurrentWeapon.maxDamage}) for {enemyDamage} damage");
 
-        DealDamage();
+        CombatOutcome();
 
         if (Enemy.Health <= 0)
         {
@@ -103,7 +101,7 @@ public class CombatManager : MonoBehaviour
         }
     }
 
-    /*public void CombatOutcome()
+    public void CombatOutcome()
     {
         if (Player.CurrentWeapon.isHealItem)
         {
@@ -113,9 +111,11 @@ public class CombatManager : MonoBehaviour
         {
             DoDamage();
         }
-    }*/
 
-    /*void DoHeal()
+        Player.Health = Mathf.Clamp(Player.Health, 0, Player.MaxHealth);
+    }
+
+    void DoHeal()
     {
         Player.Health += playerDamage;
         Player.Health -= enemyDamage;
@@ -134,27 +134,6 @@ public class CombatManager : MonoBehaviour
     void DisplayDamage(int playerNetDamage, int enemyDamage)
     {
         Debug.LogError(turns);
-
-        // hide show
-        if (turns > 0)
-        {
-            PlayerInfo.damageTaken.gameObject.SetActive(true);
-            EnemyInfo.damageTaken.gameObject.SetActive(true);
-        }
-        else
-        {
-            PlayerInfo.damageTaken.gameObject.SetActive(false);
-            EnemyInfo.damageTaken.gameObject.SetActive(false);
-        }
-
-        Debug.Log($"PlayerInfo damageTaken active: {PlayerInfo.damageTaken.gameObject.activeSelf}");
-        Debug.Log($"EnemyInfo damageTaken active: {EnemyInfo.damageTaken.gameObject.activeSelf}");
-
-        // if player heals
-        if (enemyDamage == 0)
-        {
-            EnemyInfo.damageTaken.gameObject.SetActive(false);
-        }
 
 
         // display player damage
@@ -177,12 +156,25 @@ public class CombatManager : MonoBehaviour
         // display enemy damage
         EnemyInfo.damageTaken.color = Color.red;
         EnemyInfo.damageTaken.text = $"{enemyDamage}";
-        
-    }*/
 
-    
+        // clear
+        if (turns == 0)
+        {
+            PlayerInfo.damageTaken.text = "";
+            EnemyInfo.damageTaken.text = "";
+        }
+        if (enemyDamage == 0)
+        {
+            EnemyInfo.damageTaken.text = "";
+        }
+
+    }
+
+    /*
         public void DealDamage()
         {
+            PlayerInfo.damageTaken.gameObject.SetActive(true);
+            EnemyInfo.damageTaken.gameObject.SetActive(true);
 
             if (Player.CurrentWeapon.isHealItem)
             {
@@ -191,9 +183,6 @@ public class CombatManager : MonoBehaviour
 
                 if (turns > 0)
                 {
-                    PlayerInfo.damageTaken.gameObject.SetActive(true);
-                    EnemyInfo.damageTaken.gameObject.SetActive(true);
-
                     int netDamage = playerDamage - enemyDamage;
 
                     if (netDamage > 0)
@@ -225,8 +214,6 @@ public class CombatManager : MonoBehaviour
 
                 if (turns > 0)
                 {
-                    PlayerInfo.damageTaken.gameObject.SetActive(true);
-                    EnemyInfo.damageTaken.gameObject.SetActive(true);
 
                     PlayerInfo.damageTaken.color = Color.red;
                     PlayerInfo.damageTaken.text = $"- {enemyDamage}";
@@ -240,7 +227,7 @@ public class CombatManager : MonoBehaviour
                     EnemyInfo.damageTaken.gameObject.SetActive(false);
                 }
             }
-        }
+        }*/
 
     public bool GetInCombat()
     {
@@ -266,13 +253,20 @@ public class CombatManager : MonoBehaviour
 
         if (winner == Player)
         {
+            uiManager.objectiveText.text = "";
+
             Player.MaxHealth += 5;
 
+            uiManager.objectiveText.text += $"Health increased to {Player.MaxHealth}";
+
             DropWeapon();
+
+
+
             EnemyObject.Die();
 
             gameManager.enemyCount -= 1;
-            Debug.Log($"DEFEATED enemy now there is {gameManager.enemyCount}");
+            Debug.Log($"DEFEATED enemy now there is {gameManager.enemyCount} left");
 
             uiManager.ActivateHUD();
         }
@@ -292,7 +286,7 @@ public class CombatManager : MonoBehaviour
                 Player.Inventory.Add(w);
                 Debug.Log($"Giving player {w}");
 
-                uiManager.objectiveText.text = $"Picked up {Enemy.CombatantName}'s {w.itemName}";
+                uiManager.objectiveText.text += $"\nPicked up {Enemy.CombatantName}'s {w.itemName}";
             }
         }
 

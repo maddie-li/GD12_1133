@@ -53,8 +53,9 @@ public class UI_Manager : MonoBehaviour
         HUD = 1,
         Pause = 2,
         Danger = 3,
-        Weapon = 4,
+        Combat = 4,
         Death = 5,
+        Win = 6,
     }
 
     void Update()
@@ -121,6 +122,11 @@ public class UI_Manager : MonoBehaviour
         gameManager.ResumeGame();
         ActivateHUD();
     }
+    public void OnRestartButton()
+    {
+        Debug.Log("Restart Button");
+        gameManager.RestartGame();
+    }
 
     public void OnQuitButton()
     {
@@ -162,11 +168,11 @@ public class UI_Manager : MonoBehaviour
         gameManager.PauseGame();
     }
 
-    public void ActivateWeapon()
+    public void ActivateCombat()
     {
         HasPickedWeapon = false;
 
-        SetLayout(MenuLayouts.Weapon);
+        SetLayout(MenuLayouts.Combat);
         weaponSelections[0].ShowWeaponSelection();
         gameManager.SlowGame();
 
@@ -190,6 +196,15 @@ public class UI_Manager : MonoBehaviour
         SetLayout(MenuLayouts.Death);
         gameManager.SlowGame();
         Debug.LogError("Game ENDED player IS DEAD!!");
+
+
+    }
+
+    public void ActivateWin()
+    {
+        SetLayout(MenuLayouts.Win);
+        gameManager.SlowGame();
+        Debug.LogError("Game ENDED player WON!!");
 
 
     }

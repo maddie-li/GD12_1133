@@ -1,29 +1,38 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
+    // PREFABS
     [SerializeField] private MapManager GameMapPrefab;
     [SerializeField] private PlayerController PlayerPrefab;
+    [SerializeField] private UI_Manager CanvasPrefab;
+    [SerializeField] private CombatManager CombatPrefab;
 
-    private MapManager _gameMap;
-    private PlayerController _playerController;
+    // REFERENCES
+    private MapManager gameMap;
+    private UI_Manager uiManager;
+    private CombatManager combatManager;
+    private PlayerController playerController;
+    private CombatantInfo playerInfo;
 
+    // PLAYER INFO
     [SerializeField] Vector3 playerStartPos;
 
-    [SerializeField] bool makeMap;
+    [SerializeField] private string playerName;
+    [SerializeField] private int playerHealth;
+    [SerializeField] private List<Item> playerInventory;
 
-<<<<<<< Updated upstream
-    public void Start()
-    {
-        Debug.Log("GameManager: Start");
-=======
+    // GAME INFO
     public int enemyCount;
+    public bool isInCombat = false;
 
     // SETUP
     public void Start()
     {
+
         // INSTANTIATE UIMANAGER
         uiManager = Instantiate(CanvasPrefab, transform);
         uiManager.SetGameManager(this); // assign reference
@@ -35,7 +44,6 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        Debug.LogWarning(enemyCount);
 
         if (enemyCount == 0)
         {
@@ -45,47 +53,59 @@ public class GameManager : MonoBehaviour
 
     public void OnStartButton()
     {
-        DontDestroyOnLoad(gameObject);
 
->>>>>>> Stashed changes
+        DontDestroyOnLoad(gameObject);
         transform.position = Vector3.zero;
+
+        SceneManager.LoadScene("MainLevel");
+
 
         SetupMap();
         SpawnPlayer();
+
+
+        uiManager.ActivateHUD(); // set UI to HUD
+
+        // INSTANTIATE COMBATMANAGER
+        SetupCombatManager();
 
     }
 
     public void SetupMap()
     {
+
+        // INSTANTIATE MAPMANAGER
+        gameMap = Instantiate(GameMapPrefab, transform);
+        gameMap.transform.position = Vector3.zero;
+
         Debug.Log("GameManager: SetupMap");
-        // create instance of map manager
-        _gameMap = Instantiate(GameMapPrefab, transform);
-        _gameMap.transform.position = Vector3.zero;
 
+        gameMap.SetUIManager(uiManager);
 
-        if (makeMap)
-        {
-            _gameMap.CreateMap();
-        }
+        // CREATE MAP 
+        gameMap.CreateMap();
 
         Debug.Log("GameManager: Done SetupMap");
     }
 
     public void SpawnPlayer()
     {
+
+        // setup info
+        playerInfo = new CombatantInfo(playerName, playerHealth, playerInventory);
+        uiManager.SetPlayerInfo(playerInfo); // assign reference
+        Debug.LogWarning("PlayerInfo being assigned to UI Manager");
+
         Debug.Log("GameManager: SpawnPlayer");
 
-        // create player
-        _playerController = Instantiate(PlayerPrefab, transform);
 
-        _playerController.transform.position = playerStartPos;
+        // create player
+        playerController = Instantiate(PlayerPrefab, transform);
+        playerController.transform.position = playerStartPos;
+        playerController.SetReferences(uiManager, playerInfo);
 
         Debug.Log("GameManager: Done SpawnPlayer");
     }
-
-<<<<<<< Updated upstream
-    
-=======
 
 
     private void SetupCombatManager()
@@ -151,7 +171,26 @@ public class GameManager : MonoBehaviour
 
     public void WinGame()
     {
+        uiManager.ActivateWin();
         Debug.LogError("WON GAME!");
+    }
+
+    public void RestartGame()
+    {
+        Debug.LogWarning("RESTART GAME");
+
+        foreach (Transform child in transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        // Go to main menu
+        DontDestroyOnLoad(gameObject);
+        SceneManager.LoadScene("StartScreen");
+
+        // Restart
+        Start();
+
     }
 
     public void ExitGame()
